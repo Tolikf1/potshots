@@ -1,38 +1,165 @@
-.App {
-  text-align: center;
+.root {
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.Container {
+  width: auto;
+  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(252, 243, 231);
+  /* cursor: none; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.Platform {
+  position: absolute;
+  display: block;
+  bottom: 0px;
+  width: 50px;
+  height: fit-content;
+  /* background-color: aqua; */
+  transform: translate(-18px, 0);
+}
+
+.Gun {
+  position: inherit;
+  opacity: 0;
+  display: block;
+  width: 5px;
+  height: 8px;
+  border-radius: 25%;
+  background-color: chocolate;
+  left: calc(50% - 2.5px);
+  transform: translate(18px, -70px);
+}
+
+.Round {
+  position: absolute;
+  width: 3px;
+  height: 15px;
+  border-radius: 25%;
+  background-color: red;
+  transform: translate(0px, 30px);
+  animation: Pulse;
+  animation-duration: 225ms;
+  animation-iteration-count: infinite;
+}
+
+.rocket {
+  /* display: flex; */
+  height: 30px;
+  transform: translate(-12px, -37px);
+  z-index: 1000;
+}
+
+@keyframes Pulse {
+  0% {
+    opacity: 1;
+    box-shadow: 0 10px 5px 2px rgb(224, 156, 8), 0 0 2px 1px rgb(86, 0, 17);
+  }
+
+  25% {
+    box-shadow: 0 10px 7px 2px rgb(178, 127, 18), 0 0 2px 1px rgb(86, 0, 17);
+  }
+
+  50% {
+    box-shadow: 0 10px 8px 2px rgb(185, 111, 14), 0 0 2px 1px rgb(86, 0, 17);
+  }
+
+  75% {
+    box-shadow: 0 10px 7px 2px rgb(201, 80, 14), 0 0 2px 1px rgb(86, 0, 17);
+  }
+
+  100% {
+    box-shadow: 0 10px 5px 2px rgb(224, 156, 8), 0 0 2px 1px rgb(86, 0, 17);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.destruction {
+  position: absolute;
+  animation: destruction;
+  animation-duration: 200ms;
+  animation-iteration-count: 1;
+  border-radius: 50%;
+}
+
+@keyframes destruction {
+  0% {
+    transform: scale(0.8);
+    box-shadow: 0 0 5px 10px rgb(240, 6, 41);
+  }
+
+  25% {
+    transform: scale(1);
+    box-shadow: 0 0 10px 20px rgb(224, 156, 8);
+  }
+
+  50% {
+    transform: scale(0.8);
+    box-shadow: 0 0 15px 30px rgb(224, 156, 8);
+  }
+
+  75% {
+    transform: scale(0.4);
+    box-shadow: 0 0 5px 10px rgb(224, 156, 8);
+  }
+
+  100% {
+    transform: scale(0.2);
+    box-shadow: 0 0 3px 5px rgb(224, 156, 8);
+  }
+  
+}
+
+.shot {
+  opacity: 1;
+  animation: shot;
+  animation-duration: 100ms;
+  animation-iteration-count: 1;
+}
+
+@keyframes shot {
+  0% {
+    box-shadow: 0 0px 2px 4px rgb(240, 6, 41);
+  }
+
+  25% {
+    box-shadow: 0 0px 4px 8px rgb(224, 156, 8);
+  }
+
+  50% {
+    box-shadow: 0 0px 4px 10px rgb(224, 156, 8);
+  }
+
+  75% {
+    box-shadow: 0 0px 2px 4px rgb(224, 156, 8);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(224, 156, 8);
+  }
+  
+}
+
+.Plate {
+  position: absolute;
+}
+
+.Direction1 {
+  transform: scaleX(-1);
+}
+
+.parachute {
+  position: absolute;
+}
+
+.score {
+  position: absolute;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  flex-direction: row;
+  width: 200px;
+  justify-content: space-around;
+  font-size: 14px;
+  height: fit-content;
+  padding: 5px;
+  color: blue;
 }
