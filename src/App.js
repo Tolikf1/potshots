@@ -30,6 +30,7 @@ export function App() {
     stats: {
       score: 0,
       misses: 0,
+      homingMissiles: 0,
     },
     
     platform: {
@@ -49,19 +50,7 @@ export function App() {
       sprite: './speed1.png',
     },
   
-    parachute: {
-      generated: false,
-      x: 0,
-      y: 0,
-      height: 0,
-      width: 0,
-      xSpeed: 3,
-      ySpeed: 2,
-      direction: 1,
-      sprite: './chute.png',
-      homingMissiles: 0,
-      collisionAnimation: 'none',
-    },
+    parachutes: [],
   
     collisionAnimations: [],
   })
@@ -76,7 +65,7 @@ export function App() {
         platform,
         rounds,
         plate,
-        parachute,
+        parachutes,
         collisionAnimations,
       } = _gameWorld.current;
       // const plate = gameWorld.plate;
@@ -108,13 +97,13 @@ export function App() {
 
       CollisionAnimationsTick(collisionAnimations)
 
-      detectCollision(plate, rounds, stats, collisionAnimations, parachute);
+      detectCollision(plate, rounds, stats, collisionAnimations, parachutes);
       DecrementPlateSize(plate);
 
-      if (parachute.generated) {
-        moveParachute(parachute);
-        CheckParachuteOutOfBounds(parachute);
-        parachuteCollision(rounds, parachute, collisionAnimations);
+      if (parachutes.length) {
+        moveParachute(parachutes);
+        CheckParachuteOutOfBounds(parachutes);
+        parachuteCollision(rounds, parachutes, collisionAnimations, stats);
       }
 
       MoveRound(rounds);
@@ -132,7 +121,7 @@ export function App() {
     platform,
     rounds,
     plate,
-    parachute,
+    parachutes,
     collisionAnimations,
   } = _gameWorld.current;
 
@@ -156,9 +145,9 @@ export function App() {
         {/* <div className={`Gun ${round.shot}`}></div> */}
         <div className={`Gun`}></div>
         {
-          parachute.homingMissiles &&
+          stats.homingMissiles &&
           <div>{
-            Array.apply(null, Array(parachute.homingMissiles)).map((_, i) =>
+            Array.apply(null, Array(stats.homingMissiles)).map((_, i) =>
               <div className='homingIndicator' style={{
                 bottom: 10 + i*10,
               }}></div>
@@ -185,26 +174,6 @@ export function App() {
           }}></img>
         )
       }
-      {/* {
-        plate.collisionAnimation !== "none" && 
-        <div>
-          <img src='./explosion.png' className={plate.collisionAnimation} style={{
-            left: collisionLocation.x,
-            bottom: collisionLocation.y,
-            width: plate.width,
-          }}></img>
-        </div>
-      }
-      {
-        parachute.collisionAnimation !== "none" && 
-        <div>
-          <img src='./explosion.png' className={parachute.collisionAnimation} style={{
-            left: collisionLocation.x,
-            bottom: collisionLocation.y - parachute.height/2,
-            width: parachute.width,
-          }}></img>
-        </div>
-      } */}
       {
         rounds.map(v => <div className='Round' style={{
             display: "Block",
@@ -215,15 +184,15 @@ export function App() {
         </div>)
       }
       {
-        parachute.generated &&
-        <div>
+        parachutes.map(parachute => 
           <img src='./chute.png' className='parachute' style={{
+            position: 'absolute',
             left: parachute.x - parachute.width/2,
             bottom: parachute.y,
             width: parachute.width,
             height: parachute.height,
           }}></img>
-        </div>
+        )
       }
     </div>
   );

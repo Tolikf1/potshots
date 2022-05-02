@@ -29,7 +29,7 @@ export function DecrementPlateSize(plate) {
     plate.width -= plate.y / (2 * window.innerHeight)
 }
 
-export function detectCollision(plate, rounds, stats, collisionAnimations, parachute) {
+export function detectCollision(plate, rounds, stats, collisionAnimations, parachutes) {
     if (stats.misses === 'loser') {
       stats.misses = 0;
     }
@@ -55,7 +55,7 @@ export function detectCollision(plate, rounds, stats, collisionAnimations, parac
 
             rounds.splice(i, 1)
             
-            createParachute(parachute, plate);
+            createParachute(parachutes, plate);
             CreateNewPlate(plate);
         }
     })
