@@ -1,5 +1,6 @@
 import { incrementMisses } from "./round";
 import { createParachute } from "./parachute";
+import { CreateCollisionAnimation } from "./collisionAnimation";
 
 export function CreateNewPlate(plate) {
     plate.width = 80;
@@ -28,16 +29,7 @@ export function DecrementPlateSize(plate) {
     plate.width -= plate.y / (2 * window.innerHeight)
 }
 
-export function collisionAnimation(plate) {
-    if (plate.collisionAnimation == 'none') {
-        plate.collisionAnimation = 'destruction'
-    }
-    else {
-        plate.collisionAnimation = 'none'
-    }
-}
-
-export function detectCollision(plate, rounds, stats, collisionLocation, parachute) {
+export function detectCollision(plate, rounds, stats, collisionAnimations, parachute) {
     if (stats.misses === 'loser') {
       stats.misses = 0;
     }
@@ -54,17 +46,17 @@ export function detectCollision(plate, rounds, stats, collisionLocation, parachu
         if (centerToRoundDistance < plateWidthSquared) {
             stats.score++
 
-            collisionLocation.x = round.x;
-            collisionLocation.y = round.y;
-            collisionAnimation(plate)
+            collisionAnimations.push(CreateCollisionAnimation(
+                round.x,
+                round.y,
+                plate.width,
+                200,
+            ))
 
             rounds.splice(i, 1)
             
             createParachute(parachute, plate);
-            setTimeout(() => {
-                collisionAnimation(plate);
-                CreateNewPlate(plate);
-            }, 200)
+            CreateNewPlate(plate);
         }
     })
   }

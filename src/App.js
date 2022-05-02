@@ -21,6 +21,7 @@ import {
   ShootRound, 
   shotAnimation 
 } from './round';
+import { CollisionAnimationsTick } from './collisionAnimation';
 
 export function App() {
   const forceRerender = useForceRerender();
@@ -62,10 +63,7 @@ export function App() {
       collisionAnimation: 'none',
     },
   
-    collisionLocation: {
-      x: 0,
-      y: 0,
-    },
+    collisionAnimations: [],
   })
 
   React.useEffect(() => {
@@ -79,7 +77,7 @@ export function App() {
         rounds,
         plate,
         parachute,
-        collisionLocation,
+        collisionAnimations,
       } = _gameWorld.current;
       // const plate = gameWorld.plate;
       switch (stats.score) {
@@ -108,13 +106,15 @@ export function App() {
       PlateFlyAway(plate);
       CheckPlateOutOfBounds(plate, stats);
 
-      detectCollision(plate, rounds, stats, collisionLocation, parachute);
+      CollisionAnimationsTick(collisionAnimations)
+
+      detectCollision(plate, rounds, stats, collisionAnimations, parachute);
       DecrementPlateSize(plate);
 
       if (parachute.generated) {
         moveParachute(parachute);
         CheckParachuteOutOfBounds(parachute);
-        parachuteCollision(rounds, parachute, collisionLocation);
+        parachuteCollision(rounds, parachute, collisionAnimations);
       }
 
       MoveRound(rounds);
@@ -133,7 +133,7 @@ export function App() {
     rounds,
     plate,
     parachute,
-    collisionLocation,
+    collisionAnimations,
   } = _gameWorld.current;
 
   return (
@@ -177,6 +177,15 @@ export function App() {
         <img src={plate.sprite} width={plate.width} className = {`Direction${plate.flightDiretion}`}></img>
       </div>
       {
+        collisionAnimations.map(collisionAnimation => 
+          <img src='./explosion.png' className='destruction' style={{
+            left: collisionAnimation.x,
+            bottom: collisionAnimation.y,
+            width: collisionAnimation.width,
+          }}></img>
+        )
+      }
+      {/* {
         plate.collisionAnimation !== "none" && 
         <div>
           <img src='./explosion.png' className={plate.collisionAnimation} style={{
@@ -195,7 +204,7 @@ export function App() {
             width: parachute.width,
           }}></img>
         </div>
-      }
+      } */}
       {
         rounds.map(v => <div className='Round' style={{
             display: "Block",

@@ -1,3 +1,5 @@
+import { CreateCollisionAnimation } from "./collisionAnimation";
+
 export function createParachute(parachute, plate) {
     parachute.x = plate.x + 20; 
     parachute.y = plate.y + 20;
@@ -25,7 +27,7 @@ export function createParachute(parachute, plate) {
     }
   }
   
-  export function parachuteCollision(rounds, parachute, collisionLocation) {
+  export function parachuteCollision(rounds, parachute, collisionAnimations) {
     let x1 = parachute.x;
     let y1 = parachute.y;
     let x2 = parachute.x - parachute.width/2;
@@ -39,22 +41,22 @@ export function createParachute(parachute, plate) {
         let area2 = Math.abs((x2 - round.x)*(y3 - round.y) - (x3 - round.x)*(y2 - round.y));
         let area3 = Math.abs((x3 - round.x)*(y1 - round.y) - (x1 - round.x)*(y3 - round.y));
 
-        if ((area1+area2+area3) == parachuteArea) {
-            parachuteCollisionAnimation(parachute)
-            collisionLocation.x = round.x;
-            collisionLocation.y = round.y + 30;
+        if (Math.abs(area1+area2+area3 - parachuteArea) < 0.01) {
+            collisionAnimations.push(CreateCollisionAnimation(
+                round.x,
+                round.y,
+                parachute.width,
+                200,
+            ))
 
             rounds.splice(i, 1)
 
-            setTimeout(() => {
-                parachuteCollisionAnimation(parachute)
-                parachute.generated = false;
-                parachute.x = 0; 
-                parachute.y = 0;
-                parachute.width = 0;
-                parachute.height = 0;
-                parachute.homingMissiles += 3;
-            }, 200)
+            parachute.generated = false;
+            parachute.x = 0; 
+            parachute.y = 0;
+            parachute.width = 0;
+            parachute.height = 0;
+            parachute.homingMissiles += 3;
         }
     })
   }
