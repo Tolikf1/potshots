@@ -34,7 +34,7 @@ export function gameManager(gameWorld) {
 
     console.log(existingPlateTypesCount)
 
-    let plateConfig = getPlateTemplate(stats);
+    let plateConfig = getPlateConfig(stats);
     plateConfig.forEach(({type, count}) => {
         let presentSpritesCount = existingPlateTypesCount[type] ?? 0
         for (let i = 0; i < (count - presentSpritesCount); i++) {
@@ -59,7 +59,7 @@ function CreateNewPlate(plateTemplate, plates) {
     plates.push(plate);
 }
 
-function getPlateTemplate(stats) {
+function getPlateConfig(stats) {
     const currentStage = stages.slice().reverse()
         .find(stage => stage.startScore <= stats.score)
     return currentStage.plateConfig
