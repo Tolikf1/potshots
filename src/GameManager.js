@@ -1,6 +1,3 @@
-import React from "react";
-import { createPlate, detectCollision } from "./plate";
-
 import stagesRaw from './gameConfig/stages.yaml'
 import plateTypesRaw from './gameConfig/plateTypes.yaml'
 
@@ -18,6 +15,7 @@ fetch(plateTypesRaw)
   .then(r => r.text())
   .then(text => {
     plateTypes = yaml.load(text)
+    Object.keys(plateTypes).forEach(k => plateTypes[k].type = k)
   });
 
 export function gameManager(gameWorld) {
@@ -30,21 +28,21 @@ export function gameManager(gameWorld) {
         collisionAnimations,
     } = gameWorld;
 
-    // console.log(stages_parsed)
+    let existingPlateTypesCount = {}
+    plates.forEach(({type}) => 
+        existingPlateTypesCount[type] = 1 + (existingPlateTypesCount[type] ?? 0))
+
+    console.log(existingPlateTypesCount)
 
     let plateConfig = getPlateTemplate(stats);
     plateConfig.forEach(({type, count}) => {
-        let presentSpritesCount = 0;
-        plates.forEach(({sprite}) => {
-            if (sprite.includes(type)) {
-                presentSpritesCount++
-            }
-        })
-        
+        let presentSpritesCount = existingPlateTypesCount[type] ?? 0
         for (let i = 0; i < (count - presentSpritesCount); i++) {
             CreateNewPlate(plateTypes[type], plates)
         }
     })
+
+    console.log(plates)
 }
 
 // plateTemplate -> [ ] -> newPlate
@@ -55,9 +53,7 @@ function CreateNewPlate(plateTemplate, plates) {
         y: 0,
         width: 80,
         flightDiretion: x > window.innerWidth/2 ? -1 : 1,
-        speed: plateTemplate.speed,
-        horizontalSpeed: plateTemplate.horizontalSpeed,
-        sprite: plateTemplate.sprite,
+        ...plateTemplate,
     };
 
     plates.push(plate);

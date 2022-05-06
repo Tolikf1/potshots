@@ -50,9 +50,9 @@ export function App() {
 
   React.useEffect(() => {
     // Initialization code
-    if (plates.length < 1) {
-      CreateNewPlate(_gameWorld.current.plates, _gameWorld.current.stats);
-    }
+    // if (plates.length < 1) {
+    //   CreateNewPlate(_gameWorld.current.plates, _gameWorld.current.stats);
+    // }
 
     const intervalId = setInterval(() => {
       const {
