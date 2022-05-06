@@ -69,7 +69,7 @@ export function CheckPlateOutOfBounds(plates, stats) {
     plates.forEach((plate, i) => {
         if (plate.y > (window.innerHeight - plate.width)) {
             plates.splice(i, 1);
-            CreateNewPlate(plates, stats);
+            // CreateNewPlate(plates, stats);
             incrementMisses(stats);
         }
     })
@@ -113,7 +113,7 @@ export function detectCollision(plates, rounds, stats, collisionAnimations, para
                 }
 
                 plates.splice(plateIndex, 1)
-                CreateNewPlate(plates, stats);
+                // CreateNewPlate(plates, stats);
             }
         })
     })

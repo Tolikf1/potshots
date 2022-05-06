@@ -23,6 +23,7 @@ import {
   shotAnimation 
 } from './round';
 import { CollisionAnimationsTick } from './collisionAnimation';
+import { gameManager } from './GameManager';
 
 export function App() {
   const forceRerender = useForceRerender();
@@ -65,6 +66,8 @@ export function App() {
       // const plate = gameWorld.plate;
       
       // checkScore(stats);
+
+      gameManager(_gameWorld.current);
 
       PlateFlyAway(plates);
       CheckPlateOutOfBounds(plates, stats);
@@ -131,7 +134,7 @@ export function App() {
       </div>
       {
         plates.map((plate) =>
-          <div className={`Plate ${plate.collisionAnimation}`} style={
+          <div className="Plate" style={
               {
                 left: plate.x - plate.width/2,
                 bottom: plate.y,
