@@ -11,6 +11,8 @@
 }
 
 .Platform {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
   display: block;
   bottom: 0px;
@@ -21,6 +23,8 @@
 }
 
 .Gun {
+  user-select: none;
+  -webkit-user-drag: none;
   position: inherit;
   opacity: 0;
   display: block;
@@ -33,6 +37,8 @@
 }
 
 .Round {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
   width: 3px;
   height: 15px;
@@ -45,7 +51,8 @@
 }
 
 .rocket {
-  /* display: flex; */
+  user-select: none;
+  -webkit-user-drag: none;
   height: 30px;
   transform: translate(-12px, -37px);
   z-index: 1000;
@@ -75,6 +82,8 @@
 }
 
 .destruction {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
   animation: destruction;
   animation-duration: 200ms;
@@ -111,6 +120,8 @@
 }
 
 .shot {
+  user-select: none;
+  -webkit-user-drag: none;
   opacity: 1;
   animation: shot;
   animation-duration: 100ms;
@@ -141,6 +152,8 @@
 }
 
 .Plate {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
 }
 
@@ -149,10 +162,14 @@
 }
 
 .parachute {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
 }
 
 .score {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
   display: flex;
   flex-direction: row;

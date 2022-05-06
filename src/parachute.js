@@ -1,7 +1,6 @@
 import { CreateCollisionAnimation } from "./collisionAnimation";
 
 export function createParachute(parachutes, plate) {
-    console.log(plate)
     const parachute = {
         x: plate.x + 20,
         y: plate.y + 20,

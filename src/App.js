@@ -8,6 +8,7 @@ import {
   CheckPlateOutOfBounds, 
   detectCollision, 
   DecrementPlateSize,
+  checkScore,
 } from './plate';
 
 import { 
@@ -38,17 +39,8 @@ export function App() {
     },
 
     rounds: [],
-  
-    plate: {
-      x: 0,
-      y: 0,
-      width: 0,
-      flightDiretion: 1,
-      collisionAnimation: 'none',
-      speed: 3,
-      horizontalSpeed: 7,
-      sprite: './speed1.png',
-    },
+
+    plates: [],
   
     parachutes: [],
   
@@ -57,48 +49,30 @@ export function App() {
 
   React.useEffect(() => {
     // Initialization code
-    CreateNewPlate(_gameWorld.current.plate);
+    if (plates.length < 1) {
+      CreateNewPlate(_gameWorld.current.plates, _gameWorld.current.stats);
+    }
 
     const intervalId = setInterval(() => {
       const {
         stats,
         platform,
         rounds,
-        plate,
+        plates,
         parachutes,
         collisionAnimations,
       } = _gameWorld.current;
       // const plate = gameWorld.plate;
-      switch (stats.score) {
-        case 0:
-          plate.speed = 3
-          plate.horizontalSpeed = 7
-          plate.sprite = './speed1.png'
-          break
-        case 10:  
-          plate.speed = 6
-          plate.horizontalSpeed = 1.5
-          plate.sprite = './speed2.png'
-          break
-        case 20:
-          plate.speed = 8
-          plate.horizontalSpeed = 0.75
-          plate.sprite = './speed3.png'
-          break
-        case 40:
-          plate.speed = 12
-          plate.horizontalSpeed = 0.5
-          plate.sprite = './speed4.png'
-          break
-      }
       
-      PlateFlyAway(plate);
-      CheckPlateOutOfBounds(plate, stats);
+      // checkScore(stats);
+
+      PlateFlyAway(plates);
+      CheckPlateOutOfBounds(plates, stats);
 
       CollisionAnimationsTick(collisionAnimations)
 
-      detectCollision(plate, rounds, stats, collisionAnimations, parachutes);
-      DecrementPlateSize(plate);
+      detectCollision(plates, rounds, stats, collisionAnimations, parachutes);
+      DecrementPlateSize(plates);
 
       if (parachutes.length) {
         moveParachute(parachutes);
@@ -120,7 +94,7 @@ export function App() {
     stats,
     platform,
     rounds,
-    plate,
+    plates,
     parachutes,
     collisionAnimations,
   } = _gameWorld.current;
@@ -144,7 +118,7 @@ export function App() {
         <img src='./manpad.png' width='50px'></img>
         {/* <div className={`Gun ${round.shot}`}></div> */}
         <div className={`Gun`}></div>
-        {
+        {/* {
           stats.homingMissiles &&
           <div>{
             Array.apply(null, Array(stats.homingMissiles)).map((_, i) =>
@@ -153,18 +127,22 @@ export function App() {
               }}></div>
             )
           }</div>
-        }
+        } */}
       </div>
-      <div className={`Plate ${plate.collisionAnimation}`} style={
-          {
-            left: plate.x - plate.width/2,
-            bottom: plate.y,
-            width: plate.width,
-            height: plate.width / 2,
-          }
-        }>
-        <img src={plate.sprite} width={plate.width} className = {`Direction${plate.flightDiretion}`}></img>
-      </div>
+      {
+        plates.map((plate) =>
+          <div className={`Plate ${plate.collisionAnimation}`} style={
+              {
+                left: plate.x - plate.width/2,
+                bottom: plate.y,
+                width: plate.width,
+                height: plate.width / 2,
+              }
+            }>
+            <img src={plate.sprite} width={plate.width} className = {`Direction${plate.flightDiretion}`}></img>
+          </div>
+        )
+      }
       {
         collisionAnimations.map(collisionAnimation => 
           <img src='./explosion.png' className='destruction' style={{
