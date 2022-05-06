@@ -1,6 +1,25 @@
 import React from "react";
 import { createPlate, detectCollision } from "./plate";
 
+import stagesRaw from './gameConfig/stages.yaml'
+import plateTypesRaw from './gameConfig/plateTypes.yaml'
+
+const yaml = require('js-yaml')
+
+let stages = []
+fetch(stagesRaw)
+  .then(r => r.text())
+  .then(text => {
+    stages = yaml.load(text)
+  });
+
+let plateTypes = []
+fetch(plateTypesRaw)
+  .then(r => r.text())
+  .then(text => {
+    plateTypes = yaml.load(text)
+  });
+
 export function gameManager(gameWorld) {
     const {
         stats,
@@ -11,8 +30,9 @@ export function gameManager(gameWorld) {
         collisionAnimations,
     } = gameWorld;
 
+    // console.log(stages_parsed)
+
     let plateConfig = getPlateTemplate(stats);
-    // let {count, type} = plateConfig[0];
     plateConfig.forEach(({type, count}) => {
         let presentSpritesCount = 0;
         plates.forEach(({sprite}) => {
@@ -44,81 +64,7 @@ function CreateNewPlate(plateTemplate, plates) {
 }
 
 function getPlateTemplate(stats) {
-    let plateConfig = []
-    if (stats.score >=40) {
-        plateConfig = [
-            {
-                count: 1,
-                type: 'speed4',
-            }
-        ]
-    }
-    else if (stats.score >=20) {
-        plateConfig = [
-            {
-                count: 1,
-                type: 'speed3',
-            }
-        ]
-    }
-    else if (stats.score >=15) {
-        plateConfig = [
-            {
-                count: 1,
-                type: 'speed2',
-            },
-            {
-                count: 1,
-                type: 'speed1',
-            }
-        ]
-    }
-    else if (stats.score >=10) {
-        plateConfig = [
-            {
-                count: 1,
-                type: 'speed2',
-            }
-        ]
-    }
-    else if (stats.score >=5) {
-        plateConfig = [
-            {
-                type: 'speed1',
-                count: 2,
-            }
-        ]
-    }
-    else if (stats.score >=0) {
-        plateConfig = [
-            {
-                type: 'speed1',
-                count: 1,
-            },
-        ]
-    }
-    return plateConfig
-}
-
-const plateTypes = {
-    'speed1': {
-        speed: 3,
-        horizontalSpeed: 7,
-        sprite: './speed1.png',
-    },
-    'speed2': {
-        speed: 6,
-        horizontalSpeed: 3,
-        sprite: './speed2.png',
-    },
-    'speed3': {
-        speed: 8,
-        horizontalSpeed: 2,
-        sprite: './speed3.png',
-    },
-    'speed4': {
-        speed: 12,
-        horizontalSpeed: 0.35,
-        sprite: './speed4.png',
-    }
+    const currentStage = stages.slice().reverse()
+        .find(stage => stage.startScore <= stats.score)
+    return currentStage.plateConfig
 }
