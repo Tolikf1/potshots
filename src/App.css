@@ -180,3 +180,11 @@
   padding: 5px;
   color: blue;
 }
+
+.Missile {
+  position: absolute;
+  display: block;
+  box-shadow: 5px rgb(240, 6, 41);
+  height: 15px;
+  width: 5px;
+}

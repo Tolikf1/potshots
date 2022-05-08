@@ -24,6 +24,7 @@ import {
 } from './round';
 import { CollisionAnimationsTick } from './collisionAnimation';
 import { gameManager } from './GameManager';
+import { createMissile, MoveHomingMissiles } from './homingMissile';
 
 export function App() {
   const forceRerender = useForceRerender();
@@ -32,7 +33,7 @@ export function App() {
     stats: {
       score: 0,
       misses: 0,
-      homingMissiles: 0,
+      homingMissiles: 5,
     },
     
     platform: {
@@ -40,25 +41,29 @@ export function App() {
     },
 
     rounds: [],
-
+    homingMissiles: [],
     plates: [],
-  
     parachutes: [],
-  
     collisionAnimations: [],
   })
 
   React.useEffect(() => {
-    // Initialization code
-    // if (plates.length < 1) {
-    //   CreateNewPlate(_gameWorld.current.plates, _gameWorld.current.stats);
-    // }
+    const keydownEventListener = e => {
+      if (e.code !== 'Space') {
+        return
+      }
+      e.preventDefault()
+      
+      createMissile(_gameWorld.current.platform, _gameWorld.current.stats, _gameWorld.current.homingMissiles)
+    }
+    document.addEventListener('keydown', keydownEventListener)
 
     const intervalId = setInterval(() => {
       const {
         stats,
         platform,
         rounds,
+        homingMissiles,
         plates,
         parachutes,
         collisionAnimations,
@@ -75,6 +80,7 @@ export function App() {
       CollisionAnimationsTick(collisionAnimations)
 
       detectCollision(plates, rounds, stats, collisionAnimations, parachutes);
+      detectCollision(plates, homingMissiles, stats, collisionAnimations, parachutes);
       DecrementPlateSize(plates);
 
       if (parachutes.length) {
@@ -84,11 +90,16 @@ export function App() {
       }
 
       MoveRound(rounds);
+
+      MoveHomingMissiles(homingMissiles, plates)
       
       forceRerender();
     }, 1000/60);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('keydown', keydownEventListener);
+    }
   }, []);
 
   // console.log(_gameWorld.current)
@@ -100,6 +111,7 @@ export function App() {
     plates,
     parachutes,
     collisionAnimations,
+    homingMissiles,
   } = _gameWorld.current;
 
   return (
@@ -111,6 +123,11 @@ export function App() {
       }}
       onClick={() => {
         ShootRound(rounds, platform);
+      }}
+      onContextMenu={e => {
+        e.preventDefault();
+        createMissile(platform, stats, homingMissiles);
+        console.log(homingMissiles)
       }}>
       <div className='score'>
         <div>Score: {stats.score}</div>
@@ -119,18 +136,7 @@ export function App() {
       </div>
       <div className='Platform' style={{left: platform.x - 25}}>
         <img src='./manpad.png' width='50px'></img>
-        {/* <div className={`Gun ${round.shot}`}></div> */}
         <div className={`Gun`}></div>
-        {/* {
-          stats.homingMissiles &&
-          <div>{
-            Array.apply(null, Array(stats.homingMissiles)).map((_, i) =>
-              <div className='homingIndicator' style={{
-                bottom: 10 + i*10,
-              }}></div>
-            )
-          }</div>
-        } */}
       </div>
       {
         plates.map((plate) =>
@@ -160,6 +166,20 @@ export function App() {
             display: "Block",
             left: v.x,
             bottom: v.y,
+        }}>
+          <img src='./rocket.png' className='rocket'></img>
+        </div>)
+      }
+      {
+        homingMissiles
+          .filter(({x, y}) => 
+            0 < x && x < window.innerWidth - 10
+            && 20 < y && y < window.innerHeight)
+          .map(v => <div className='Missile Round' style={{
+            display: "Block",
+            left: v.x,
+            bottom: v.y,
+            transform: `rotate(${-v.direction.angle}rad)`,
         }}>
           <img src='./rocket.png' className='rocket'></img>
         </div>)

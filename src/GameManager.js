@@ -32,8 +32,6 @@ export function gameManager(gameWorld) {
     plates.forEach(({type}) => 
         existingPlateTypesCount[type] = 1 + (existingPlateTypesCount[type] ?? 0))
 
-    console.log(existingPlateTypesCount)
-
     let plateConfig = getPlateConfig(stats);
     plateConfig.forEach(({type, count}) => {
         let presentSpritesCount = existingPlateTypesCount[type] ?? 0
@@ -41,8 +39,6 @@ export function gameManager(gameWorld) {
             CreateNewPlate(plateTypes[type], plates)
         }
     })
-
-    console.log(plates)
 }
 
 // plateTemplate -> [ ] -> newPlate

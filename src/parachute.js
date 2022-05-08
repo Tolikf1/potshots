@@ -56,6 +56,7 @@ export function parachuteCollision(rounds, parachutes, collisionAnimations, stat
 
                 rounds.splice(j, 1)
                 parachutes.splice(i, 1)
+                stats.homingMissiles += 3
             }
         })
     })
