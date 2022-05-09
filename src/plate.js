@@ -99,6 +99,7 @@ export function detectCollision(plates, rounds, stats, collisionAnimations, para
         
             if (centerToRoundDistance < plateWidthSquared) {
                 stats.score++
+                stats.stageScore++
 
                 collisionAnimations.push(CreateCollisionAnimation(
                     round.x,

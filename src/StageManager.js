@@ -38,7 +38,11 @@ function CreateNewPlate(plateTemplate, plates) {
 }
 
 function getPlateConfig(stats) {
-    const currentStage = getGameStages().slice().reverse()
-        .find(stage => stage.startScore <= stats.score)
+    let currentStage = getGameStages()[stats.stage]
+    if (currentStage.scoreToBeat != -1 && currentStage.scoreToBeat <= stats.stageScore) {
+        stats.stage++
+        stats.stageScore %= currentStage.scoreToBeat
+        currentStage = getGameStages()[stats.stage]
+    }
     return currentStage.plateConfig
 }

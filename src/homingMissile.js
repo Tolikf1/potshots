@@ -15,7 +15,8 @@ function missileTemplate(xPosition) {
 }
 
 export function createMissile(platform, stats, homingMissiles) {
-    if (stats.homingMissiles <= 0) {
+    const isInfinite = getHomingMissileConfig().isInfinite
+    if (!isInfinite && stats.homingMissiles <= 0) {
         return
     }
     

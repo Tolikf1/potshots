@@ -32,7 +32,11 @@ export function App() {
   const _gameWorld = useRef({
     stats: {
       score: 0,
+      stage: 0,
+      stageScore: 0,
+
       misses: 0,
+      
       homingMissiles: 5,
     },
     

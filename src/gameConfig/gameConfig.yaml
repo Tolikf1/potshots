@@ -3,35 +3,36 @@ round:
 homingMissile:
   speed: 25
   angleSpeedDeg: 7.5
+  isInfinite: false
 parachute:
   xSpeed: 3
   ySpeed: 1
   chance: 20
 
 gameStages:
-  - startScore: 0
+  - scoreToBeat: 5
     plateConfig:
       - type: speed1
         count: 1
-  - startScore: 5
+  - scoreToBeat: 5
     plateConfig:
       - type: speed1
         count: 2
-  - startScore: 10
+  - scoreToBeat: 5
     plateConfig:
       - type: speed2
         count: 1
-  - startScore: 15
+  - scoreToBeat: 5
     plateConfig:
       - type: speed2
         count: 1
       - type: speed1
         count: 1
-  - startScore: 20
+  - scoreToBeat: 20
     plateConfig:
       - type: speed3
         count: 1
-  - startScore: 40
+  - scoreToBeat: -1
     plateConfig:
       - type: speed4
         count: 1
