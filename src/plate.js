@@ -1,6 +1,7 @@
 import { incrementMisses } from "./round";
 import { createParachute } from "./parachute";
 import { CreateCollisionAnimation } from "./collisionAnimation";
+import { getParachuteConfig } from "./ConfigProvider";
 
 export function createPlate(x, y, width, flightDiretion, collisionAnimation, speed, horizontalSpeed, sprite) {
     return {
@@ -107,13 +108,12 @@ export function detectCollision(plates, rounds, stats, collisionAnimations, para
                 ))
 
                 rounds.splice(roundIndex, 1)
-                let probabilityOfEjection = (Math.random()*10) + 1;
-                if (probabilityOfEjection <= 2) {
+                let probabilityOfEjection = (Math.random()*100);
+                if (probabilityOfEjection <= getParachuteConfig().chance) {
                     createParachute(parachutes, plate);
                 }
 
                 plates.splice(plateIndex, 1)
-                // CreateNewPlate(plates, stats);
             }
         })
     })

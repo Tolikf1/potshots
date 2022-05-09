@@ -1,22 +1,4 @@
-import stagesRaw from './gameConfig/stages.yaml'
-import plateTypesRaw from './gameConfig/plateTypes.yaml'
-
-const yaml = require('js-yaml')
-
-let stages = []
-fetch(stagesRaw)
-  .then(r => r.text())
-  .then(text => {
-    stages = yaml.load(text)
-  });
-
-let plateTypes = []
-fetch(plateTypesRaw)
-  .then(r => r.text())
-  .then(text => {
-    plateTypes = yaml.load(text)
-    Object.keys(plateTypes).forEach(k => plateTypes[k].type = k)
-  });
+import { getGameStages, getPlateTypes } from './ConfigProvider';
 
 export function gameManager(gameWorld) {
     const {
@@ -36,7 +18,7 @@ export function gameManager(gameWorld) {
     plateConfig.forEach(({type, count}) => {
         let presentSpritesCount = existingPlateTypesCount[type] ?? 0
         for (let i = 0; i < (count - presentSpritesCount); i++) {
-            CreateNewPlate(plateTypes[type], plates)
+            CreateNewPlate(getPlateTypes()[type], plates)
         }
     })
 }
@@ -56,7 +38,7 @@ function CreateNewPlate(plateTemplate, plates) {
 }
 
 function getPlateConfig(stats) {
-    const currentStage = stages.slice().reverse()
+    const currentStage = getGameStages().slice().reverse()
         .find(stage => stage.startScore <= stats.score)
     return currentStage.plateConfig
 }

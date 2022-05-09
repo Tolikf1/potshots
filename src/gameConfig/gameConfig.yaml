@@ -1,0 +1,56 @@
+round:
+  speed: 15
+homingMissile:
+  speed: 25
+  angleSpeedDeg: 7.5
+parachute:
+  xSpeed: 3
+  ySpeed: 1
+  chance: 20
+
+gameStages:
+  - startScore: 0
+    plateConfig:
+      - type: speed1
+        count: 1
+  - startScore: 5
+    plateConfig:
+      - type: speed1
+        count: 2
+  - startScore: 10
+    plateConfig:
+      - type: speed2
+        count: 1
+  - startScore: 15
+    plateConfig:
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 1
+  - startScore: 20
+    plateConfig:
+      - type: speed3
+        count: 1
+  - startScore: 40
+    plateConfig:
+      - type: speed4
+        count: 1
+
+plateTypes:
+  speed1:
+    speed: 3
+    horizontalSpeed: 7
+    sprite: ./speed1.png
+  speed2:
+    speed: 6
+    horizontalSpeed: 3
+    sprite: ./speed2.png
+  speed3:
+    speed: 8
+    horizontalSpeed: 2
+    sprite: ./speed3.png
+  speed4:
+    speed: 12
+    horizontalSpeed: 0.35
+    sprite: ./speed4.png
+

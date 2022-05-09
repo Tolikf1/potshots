@@ -1,8 +1,10 @@
+import { getRoundConfig } from "./ConfigProvider";
+
 export function CreateRound(x, y) {
     return {
         x: x,
         y: y,
-        speed: 15,
+        speed: getRoundConfig().speed,
     }
 }
 

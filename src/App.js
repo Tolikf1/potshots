@@ -23,7 +23,7 @@ import {
   shotAnimation 
 } from './round';
 import { CollisionAnimationsTick } from './collisionAnimation';
-import { gameManager } from './GameManager';
+import { gameManager } from './StageManager';
 import { createMissile, MoveHomingMissiles } from './homingMissile';
 
 export function App() {

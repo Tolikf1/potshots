@@ -1,12 +1,14 @@
 import { CreateCollisionAnimation } from "./collisionAnimation";
+import { getParachuteConfig } from "./ConfigProvider";
 
 export function createParachute(parachutes, plate) {
+    const config = getParachuteConfig()
     const parachute = {
         x: plate.x + 20,
         y: plate.y + 20,
         width: plate.width,
-        xSpeed: 3,
-        ySpeed: 1
+        xSpeed: config.xSpeed,
+        ySpeed: config.ySpeed,
     }
     parachute.height = parachute.width*1.5
     parachute.direction = parachute.x > window.innerWidth/2
