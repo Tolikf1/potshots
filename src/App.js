@@ -87,6 +87,7 @@ export function App() {
         moveParachute(parachutes);
         CheckParachuteOutOfBounds(parachutes);
         parachuteCollision(rounds, parachutes, collisionAnimations, stats);
+        parachuteCollision(homingMissiles, parachutes, collisionAnimations, stats);
       }
 
       MoveRound(rounds);
