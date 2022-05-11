@@ -72,9 +72,6 @@ export function App() {
         parachutes,
         collisionAnimations,
       } = _gameWorld.current;
-      // const plate = gameWorld.plate;
-      
-      // checkScore(stats);
 
       gameManager(_gameWorld.current);
 

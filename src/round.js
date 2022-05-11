@@ -42,6 +42,8 @@ export function incrementMisses(stats) {
         }
         stats.misses = "loser";
         stats.score = 0;
+        stats.stage = 0;
+        stats.stageScore = 0;
     }
 }
   
