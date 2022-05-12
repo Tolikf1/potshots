@@ -54,11 +54,13 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
 // missile. plates[] -> targetPLate
 export function detectTarget(missile, plates) {
     let targetPlate = null;
-    let minimalDistance = Infinity;
+    let minimalCost = Infinity;
     plates.forEach(plate => {
         const distance = (plate.x - missile.x)**2 + (plate.y - missile.y)**2;
-        if (distance !== 0 && distance < minimalDistance) {
-            minimalDistance = distance;
+        const angle = Math.abs(getAngleToPlate(missile, plate));
+        const cost = distance * angle**2;
+        if (cost < minimalCost) {
+            minimalCost = cost;
             targetPlate = plate;
         }
     })
@@ -76,10 +78,11 @@ export function MoveHomingMissiles(homingMissiles, plates, collisionAnimations) 
         else {
             freefallRotate(missile);
             freefallMissile(missile);
-            if (missile.y <= 0) {
-                collisionAnimations.push(CreateCollisionAnimation(missile.x, missile.y, 25, 200));
-                homingMissiles.splice(index, 1);
-            }
+        }
+
+        if (missile.y <= 0) {
+            collisionAnimations.push(CreateCollisionAnimation(missile.x, missile.y, 25, 200));
+            homingMissiles.splice(index, 1);
         }
     })
 }
@@ -87,12 +90,7 @@ export function MoveHomingMissiles(homingMissiles, plates, collisionAnimations) 
 function moveMissile(missile, targetPlate) {
     // update direction
     if (targetPlate) {
-        const mDir = {...missile.direction}
-        let plateVector = {
-            x: targetPlate.x - missile.x,
-            y: targetPlate.y - missile.y,
-        };
-        let theta = getSignedAngle(mDir, plateVector);
+        let theta = getAngleToPlate(missile, targetPlate);
         let rotationAngle = - getDeltaTheta(theta);
         rotateDirectionObject(missile.direction, rotationAngle);
     }
@@ -131,6 +129,14 @@ function freefallRotate(missile) {
         }
     }
     direction.angle += rotationAngle * Math.sign(direction.angle);
+}
+
+function getAngleToPlate(missile, plate) {
+    let plateVector = {
+        x: plate.x - missile.x,
+        y: plate.y - missile.y,
+    };
+    return getSignedAngle(missile.direction, plateVector);
 }
 
 function getSignedAngle(mVec, pVec) {

@@ -16,10 +16,10 @@ parachute:
   chance: 20
 
 gameStages:
-  - scoreToBeat: 5
+  - scoreToBeat: 50
     plateConfig:
       - type: speed1
-        count: 1
+        count: 4
   - scoreToBeat: 5
     plateConfig:
       - type: speed1
