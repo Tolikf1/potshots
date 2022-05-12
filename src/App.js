@@ -18,6 +18,7 @@ import {
 } from './parachute';
 
 import { 
+  CreateRound,
   MoveRound, 
   ShootRound, 
   shotAnimation 
@@ -52,22 +53,44 @@ export function App() {
     plates: [],
     parachutes: [],
     collisionAnimations: [],
+
+    keysPressed: {},
   })
 
   React.useEffect(() => {
     const keydownEventListener = e => {
-      if (e.code !== 'Space') {
-        return
-      }
-      e.preventDefault()
-      
-      createMissile(
+      // e.preventDefault()
+      // console.log('down:', e);
+      _gameWorld.current.keysPressed[e.code] = '';
+      // if (e.code === 'KeyZ') {
+      //   createMissile(
+      //     _gameWorld.current.platform,
+      //     _gameWorld.current.homingMissiles,
+      //     _gameWorld.current.homingMissilesStats
+      //   )
+      //   ShootRound(
+      //     _gameWorld.current.rounds,
+      //     _gameWorld.current.platform)
+      // }
+    }
+    const keyupEventListener = e => {
+      // console.log('up:', e)
+      delete _gameWorld.current.keysPressed[e.code];
+    }
+    document.addEventListener('keydown', keydownEventListener);
+    document.addEventListener('keyup', keyupEventListener);
+
+    const keyMappings = {
+      'KeyZ': () => createMissile(
         _gameWorld.current.platform,
         _gameWorld.current.homingMissiles,
         _gameWorld.current.homingMissilesStats
-      )
+      ),
+      'KeyX': () => ShootRound(
+        _gameWorld.current.rounds,
+        _gameWorld.current.platform
+      ),
     }
-    document.addEventListener('keydown', keydownEventListener)
 
     const intervalId = setInterval(() => {
       const {
@@ -79,7 +102,14 @@ export function App() {
         parachutes,
         collisionAnimations,
         homingMissilesStats,
+        keysPressed,
       } = _gameWorld.current;
+
+      Object.keys(keysPressed).forEach(key => {
+        if (keyMappings[key]) {
+          keyMappings[key]();
+        }
+      })
 
       gameManager(_gameWorld.current);
 
@@ -109,6 +139,7 @@ export function App() {
     return () => {
       clearInterval(intervalId);
       document.removeEventListener('keydown', keydownEventListener);
+      document.removeEventListener('keyup', keyupEventListener);
     }
   }, []);
 
@@ -122,6 +153,7 @@ export function App() {
     parachutes,
     collisionAnimations,
     homingMissiles,
+    homingMissilesStats,
   } = _gameWorld.current;
 
   return (
@@ -131,12 +163,10 @@ export function App() {
           platform.x = e.clientX;
         }
       }}
-      onClick={() => {
-        ShootRound(rounds, platform);
-      }}>
+      >
       <div className='score'>
         <div>Score: {stats.score}</div>
-        <div>{stats.misses}</div>
+        <div>Missiles: {homingMissilesStats.onScreen}</div>
         <div>Highscore {localStorage.getItem('highscore')}</div>
       </div>
       <div className='Platform' style={{left: platform.x - 25}}>
