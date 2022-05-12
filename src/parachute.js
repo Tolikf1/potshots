@@ -1,5 +1,5 @@
 import { CreateCollisionAnimation } from "./collisionAnimation";
-import { getParachuteConfig } from "./ConfigProvider";
+import { getHomingMissileConfig, getParachuteConfig } from "./ConfigProvider";
 
 export function createParachute(parachutes, plate) {
     const config = getParachuteConfig()
@@ -33,7 +33,7 @@ export function CheckParachuteOutOfBounds(parachutes) {
     })
 }
   
-export function parachuteCollision(rounds, parachutes, collisionAnimations, stats) {
+export function parachuteCollision(rounds, parachutes, collisionAnimations, homingMissilesStats) {
     parachutes.forEach((parachute, i) => {
         let x1 = parachute.x;
         let y1 = parachute.y;
@@ -58,7 +58,10 @@ export function parachuteCollision(rounds, parachutes, collisionAnimations, stat
 
                 rounds.splice(j, 1)
                 parachutes.splice(i, 1)
-                stats.homingMissiles += 3
+
+                homingMissilesStats.onScreen = Math.min(
+                    homingMissilesStats.onScreen + 1,
+                    getHomingMissileConfig().maxOnScreen)
             }
         })
     })

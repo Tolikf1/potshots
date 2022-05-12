@@ -182,9 +182,46 @@
 }
 
 .Missile {
+  user-select: none;
+  -webkit-user-drag: none;
   position: absolute;
-  display: block;
-  box-shadow: 5px rgb(240, 6, 41);
+  width: 3px;
   height: 15px;
-  width: 5px;
+  border-radius: 25%;
+  background-color: red;
+  transform: translate(0px, 30px);
+  animation: MissilePulse;
+  animation-duration: 225ms;
+  animation-iteration-count: infinite;
+}
+
+.missileTail {
+  user-select: none;
+  -webkit-user-drag: none;
+  height: 30px;
+  transform: translate(-12px, -37px);
+  z-index: 1000;
+}
+
+@keyframes MissilePulse {
+  0% {
+    opacity: 1;
+    box-shadow: 0 10px 5px 2px rgb(226, 238, 59), 0 0 2px 1px rgb(234, 31, 72);
+  }
+
+  25% {
+    box-shadow: 0 10px 7px 2px rgb(178, 188, 35), 0 0 2px 1px rgb(192, 16, 51);
+  }
+
+  50% {
+    box-shadow: 0 10px 8px 2px rgb(127, 135, 17), 0 0 2px 1px rgb(180, 12, 46);
+  }
+
+  75% {
+    box-shadow: 0 10px 7px 2px rgb(115, 122, 9), 0 0 2px 1px rgb(167, 7, 39);
+  }
+
+  100% {
+    box-shadow: 0 10px 5px 2px rgb(159, 169, 17), 0 0 2px 1px rgb(245, 31, 74);
+  }
 }

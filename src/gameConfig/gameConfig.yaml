@@ -1,9 +1,15 @@
 round:
   speed: 15
 homingMissile:
-  speed: 25
+  speed: 25  
   angleSpeedDeg: 7.5
-  isInfinite: false
+  maxOnScreen: 5
+  cooldown: 500
+  lifespan: 45
+  fallSpeed: 
+    x: 0.5
+    y: 2
+    rotation: 5
 parachute:
   xSpeed: 3
   ySpeed: 1
@@ -51,7 +57,7 @@ plateTypes:
     horizontalSpeed: 2
     sprite: ./speed3.png
   speed4:
-    speed: 12
+    speed: 24
     horizontalSpeed: 0.35
     sprite: ./speed4.png
 

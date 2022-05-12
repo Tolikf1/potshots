@@ -36,8 +36,11 @@ export function App() {
       stageScore: 0,
 
       misses: 0,
-      
-      homingMissiles: 5,
+    },
+
+    homingMissilesStats: {
+      shot: false,
+      onScreen: 1,
     },
     
     platform: {
@@ -58,7 +61,11 @@ export function App() {
       }
       e.preventDefault()
       
-      createMissile(_gameWorld.current.platform, _gameWorld.current.stats, _gameWorld.current.homingMissiles)
+      createMissile(
+        _gameWorld.current.platform,
+        _gameWorld.current.homingMissiles,
+        _gameWorld.current.homingMissilesStats
+      )
     }
     document.addEventListener('keydown', keydownEventListener)
 
@@ -71,12 +78,13 @@ export function App() {
         plates,
         parachutes,
         collisionAnimations,
+        homingMissilesStats,
       } = _gameWorld.current;
 
       gameManager(_gameWorld.current);
 
       PlateFlyAway(plates);
-      CheckPlateOutOfBounds(plates, stats);
+      CheckPlateOutOfBounds(plates, homingMissilesStats);
 
       CollisionAnimationsTick(collisionAnimations)
 
@@ -87,13 +95,13 @@ export function App() {
       if (parachutes.length) {
         moveParachute(parachutes);
         CheckParachuteOutOfBounds(parachutes);
-        parachuteCollision(rounds, parachutes, collisionAnimations, stats);
-        parachuteCollision(homingMissiles, parachutes, collisionAnimations, stats);
+        parachuteCollision(rounds, parachutes, collisionAnimations, homingMissilesStats);
+        parachuteCollision(homingMissiles, parachutes, collisionAnimations, homingMissilesStats);
       }
 
       MoveRound(rounds);
 
-      MoveHomingMissiles(homingMissiles, plates)
+      MoveHomingMissiles(homingMissiles, plates, collisionAnimations)
       
       forceRerender();
     }, 1000/60);
@@ -125,11 +133,6 @@ export function App() {
       }}
       onClick={() => {
         ShootRound(rounds, platform);
-      }}
-      onContextMenu={e => {
-        e.preventDefault();
-        createMissile(platform, stats, homingMissiles);
-        console.log(homingMissiles)
       }}>
       <div className='score'>
         <div>Score: {stats.score}</div>
@@ -177,13 +180,14 @@ export function App() {
           .filter(({x, y}) => 
             0 < x && x < window.innerWidth - 10
             && 20 < y && y < window.innerHeight)
-          .map(v => <div className='Missile Round' style={{
+          .map(v => <div className='Round' style={{
             display: "Block",
             left: v.x,
             bottom: v.y,
+            height: v.lifespan/10,
             transform: `rotate(${-v.direction.angle}rad)`,
         }}>
-          <img src='./rocket.png' className='rocket'></img>
+          <img src='./missile.png' className='rocket'></img>
         </div>)
       }
       {

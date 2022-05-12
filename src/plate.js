@@ -66,11 +66,13 @@ export function PlateFlyAway(plates) {
     })
 }
 
-export function CheckPlateOutOfBounds(plates, stats) {
+export function CheckPlateOutOfBounds(plates, homingMissilesStats) {
     plates.forEach((plate, i) => {
         if (plate.y > (window.innerHeight - plate.width)) {
             plates.splice(i, 1);
-            incrementMisses(stats);
+            homingMissilesStats.onScreen = Math.max(
+                homingMissilesStats.onScreen - 1,
+                1)
         }
     })
 }

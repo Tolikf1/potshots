@@ -1,28 +1,54 @@
+import { CreateCollisionAnimation } from "./collisionAnimation";
 import { getHomingMissileConfig } from "./ConfigProvider";
 
 // xPosition -> [] -> missileTemplate
-function missileTemplate(xPosition) {
+function missileTemplate(xPosition, angle, homingMissilesStats) {
+    const config = getHomingMissileConfig();
     return {
         x: xPosition,
         y: 80,
-        direction: {
-            x: 0,
-            y: 1,
-            angle: 0,
-        },
-        speed: getHomingMissileConfig().speed,
+        direction: createDirectionObject(angle, homingMissilesStats),
+        speed: config.speed,
+        lifespan: config.lifespan,
+        fallSpeed: config.fallSpeed,
     }
 }
 
-export function createMissile(platform, stats, homingMissiles) {
-    const isInfinite = getHomingMissileConfig().isInfinite
-    if (!isInfinite && stats.homingMissiles <= 0) {
-        return
+function createDirectionObject(angle, homingMissilesStats) {
+    const direction = {
+        x: 0,
+        y: 1,
+        angle: 0,
+    }
+    if (angle) {
+        rotateDirectionObject(direction, angle);
+    }
+    return direction;
+}
+
+export function createMissile(platform, homingMissiles, homingMissilesStats) {
+    if (!homingMissilesStats.shot) {
+        for (let i = 0; i < homingMissilesStats.onScreen; i++) {
+            let newMissile;
+            let angleIncrease = 90/(homingMissilesStats.onScreen - 1);
+            if (homingMissilesStats.onScreen == 1) {
+                newMissile = missileTemplate(platform.x)
+            }
+            else {
+                newMissile = missileTemplate(
+                    platform.x - (homingMissilesStats.onScreen*20)/2 + i*20,
+                    toRad(45 - angleIncrease*i))
+            }
+            
+            homingMissiles.push(newMissile);
+        }
+
+        homingMissilesStats.shot = true;
+        setTimeout(() => {
+            homingMissilesStats.shot = false;
+        }, getHomingMissileConfig().cooldown)
     }
     
-    const newMissile = missileTemplate(platform.x)
-    homingMissiles.push(newMissile);
-    stats.homingMissiles--
 }
 
 // missile. plates[] -> targetPLate
@@ -40,29 +66,71 @@ export function detectTarget(missile, plates) {
     return targetPlate;
 }
 
-export function MoveHomingMissiles(homingMissiles, plates) {
-    homingMissiles.forEach(missile => {
-        const currentTarget = detectTarget(missile, plates);
-        moveMissile(missile, currentTarget);
+export function MoveHomingMissiles(homingMissiles, plates, collisionAnimations) {
+    homingMissiles.forEach((missile, index) => {
+        missile.lifespan--;
+        if (missile.lifespan > 0) {
+            const currentTarget = detectTarget(missile, plates);
+            moveMissile(missile, currentTarget);
+        }
+        else {
+            freefallRotate(missile);
+            freefallMissile(missile);
+            if (missile.y <= 0) {
+                collisionAnimations.push(CreateCollisionAnimation(missile.x, missile.y, 25, 200));
+                homingMissiles.splice(index, 1);
+            }
+        }
     })
 }
 
 function moveMissile(missile, targetPlate) {
     // update direction
-    const mDir = {...missile.direction}
-    let plateVector = {
-        x: targetPlate.x - missile.x,
-        y: targetPlate.y - missile.y,
-    };
-    let theta = getSignedAngle(mDir, plateVector);
-    let rotationAngle = - getDeltaTheta(theta);
-    missile.direction.angle += rotationAngle;
-    missile.direction.x = mDir.x * Math.cos(rotationAngle) - mDir.y * Math.sin(rotationAngle);
-    missile.direction.y = mDir.x * Math.sin(rotationAngle) + mDir.y * Math.cos(rotationAngle);
+    if (targetPlate) {
+        const mDir = {...missile.direction}
+        let plateVector = {
+            x: targetPlate.x - missile.x,
+            y: targetPlate.y - missile.y,
+        };
+        let theta = getSignedAngle(mDir, plateVector);
+        let rotationAngle = - getDeltaTheta(theta);
+        rotateDirectionObject(missile.direction, rotationAngle);
+    }
 
     // update position
     missile.x = missile.x + missile.direction.x * missile.speed;
     missile.y = missile.y + missile.direction.y * missile.speed;
+}
+
+function rotateDirectionObject(direction, rotationAngle) {
+    const mDir = {...direction}
+
+    direction.angle += rotationAngle;
+    direction.x = mDir.x * Math.cos(rotationAngle) - mDir.y * Math.sin(rotationAngle);
+    direction.y = mDir.x * Math.sin(rotationAngle) + mDir.y * Math.cos(rotationAngle);
+}
+
+function freefallMissile(missile) {
+    // update speed.x
+    missile.speed = Math.max(missile.speed - missile.fallSpeed.x, 0);
+
+    // update position
+    missile.x = missile.x + missile.direction.x * missile.speed;
+    missile.y = missile.y + missile.direction.y * missile.speed;
+
+    missile.y -= missile.fallSpeed.y * Math.abs(missile.lifespan);
+}
+
+function freefallRotate(missile) {
+    const direction = missile.direction;
+    let rotationAngle = toRad(missile.fallSpeed.rotation);
+    let freefallAngeDifference = toRad(180) - Math.abs(direction.angle);
+    if (direction.angle !== toRad(180)) {
+        if (freefallAngeDifference < rotationAngle) {
+            rotationAngle = freefallAngeDifference;
+        }
+    }
+    direction.angle += rotationAngle * Math.sign(direction.angle);
 }
 
 function getSignedAngle(mVec, pVec) {
@@ -75,7 +143,7 @@ function getSignedAngle(mVec, pVec) {
 }
 
 function getDeltaTheta(theta) {
-    let maxRotation = getHomingMissileConfig().angleSpeedDeg * Math.PI/180;
+    let maxRotation = toRad(getHomingMissileConfig().angleSpeedDeg);
     if (Math.abs(theta) > maxRotation) {
         if (theta < 0) {
             maxRotation = -maxRotation
@@ -85,4 +153,8 @@ function getDeltaTheta(theta) {
     else {
         return theta
     }
+}
+
+function toRad(deg) {
+    return deg * Math.PI / 180;
 }
