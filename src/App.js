@@ -43,6 +43,10 @@ export function App() {
       shot: false,
       onScreen: 1,
     },
+
+    roundStats: {
+      shot: false,
+    },
     
     platform: {
       x: undefined
@@ -54,42 +58,45 @@ export function App() {
     parachutes: [],
     collisionAnimations: [],
 
+    keysPressedPrev: {},
     keysPressed: {},
+
+    paused: false,
   })
 
   React.useEffect(() => {
     const keydownEventListener = e => {
-      // e.preventDefault()
-      // console.log('down:', e);
-      _gameWorld.current.keysPressed[e.code] = '';
-      // if (e.code === 'KeyZ') {
-      //   createMissile(
-      //     _gameWorld.current.platform,
-      //     _gameWorld.current.homingMissiles,
-      //     _gameWorld.current.homingMissilesStats
-      //   )
-      //   ShootRound(
-      //     _gameWorld.current.rounds,
-      //     _gameWorld.current.platform)
-      // }
+      _gameWorld.current.keysPressed[e.code] = 'down';
     }
     const keyupEventListener = e => {
-      // console.log('up:', e)
-      delete _gameWorld.current.keysPressed[e.code];
+      _gameWorld.current.keysPressed[e.code] = 'up';
     }
     document.addEventListener('keydown', keydownEventListener);
     document.addEventListener('keyup', keyupEventListener);
 
     const keyMappings = {
-      'KeyZ': () => createMissile(
-        _gameWorld.current.platform,
-        _gameWorld.current.homingMissiles,
-        _gameWorld.current.homingMissilesStats
-      ),
-      'KeyX': () => ShootRound(
-        _gameWorld.current.rounds,
-        _gameWorld.current.platform
-      ),
+      'KeyX': () => {
+        if (_gameWorld.current.keysPressed['KeyX'] !== 'down') {
+          return;
+        }
+
+        createMissile(
+          _gameWorld.current.platform,
+          _gameWorld.current.homingMissiles,
+          _gameWorld.current.homingMissilesStats
+        );
+        ShootRound(
+          _gameWorld.current.rounds,
+          _gameWorld.current.platform,
+          _gameWorld.current.roundStats
+        );
+      },
+      'KeyP': () => {
+        if (_gameWorld.current.keysPressed['KeyP'] === 'down' && 
+          _gameWorld.current.keysPressedPrev['KeyP'] !== 'down') {
+          _gameWorld.current.paused = !_gameWorld.current.paused;
+        }
+      }
     }
 
     const intervalId = setInterval(() => {
@@ -103,13 +110,20 @@ export function App() {
         collisionAnimations,
         homingMissilesStats,
         keysPressed,
+        roundStats,
       } = _gameWorld.current;
 
       Object.keys(keysPressed).forEach(key => {
         if (keyMappings[key]) {
           keyMappings[key]();
         }
-      })
+      });
+      _gameWorld.current.keysPressedPrev = {...keysPressed};
+
+
+      if (_gameWorld.current.paused) {
+        return;
+      }
 
       gameManager(_gameWorld.current);
 

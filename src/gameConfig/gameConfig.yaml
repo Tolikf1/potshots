@@ -1,5 +1,6 @@
 round:
   speed: 15
+  cooldown: 50
 homingMissile:
   speed: 25  
   angleSpeedDeg: 7.5
@@ -16,24 +17,24 @@ parachute:
   chance: 20
 
 gameStages:
-  - scoreToBeat: 50
+  - scoreToBeat: 20
     plateConfig:
       - type: speed1
         count: 4
-  - scoreToBeat: 5
+  # - scoreToBeat: 5
+  #   plateConfig:
+  #     - type: speed1
+  #       count: 2
+  - scoreToBeat: 20
     plateConfig:
+      - type: speed2
+        count: 4
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed2
+        count: 3
       - type: speed1
         count: 2
-  - scoreToBeat: 5
-    plateConfig:
-      - type: speed2
-        count: 1
-  - scoreToBeat: 5
-    plateConfig:
-      - type: speed2
-        count: 1
-      - type: speed1
-        count: 1
   - scoreToBeat: 20
     plateConfig:
       - type: speed3
@@ -41,6 +42,10 @@ gameStages:
   - scoreToBeat: -1
     plateConfig:
       - type: speed4
+        count: 1
+      - type: speed1
+        count: 1
+      - type: speed2
         count: 1
 
 plateTypes:
@@ -57,7 +62,7 @@ plateTypes:
     horizontalSpeed: 2
     sprite: ./speed3.png
   speed4:
-    speed: 24
-    horizontalSpeed: 0.35
+    speed: 12
+    horizontalSpeed: 1
     sprite: ./speed4.png
 

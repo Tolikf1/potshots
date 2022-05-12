@@ -8,17 +8,19 @@ export function CreateRound(x, y) {
     }
 }
 
-export function ShootRound(rounds, platform) {
-    const round = CreateRound(
-        platform.x,
-        80,
-    )
-    rounds.push(round)
-
-    round.shot = 'shot';
-    setTimeout(() => {
-      round.shot = 'none'
-    }, 100);
+export function ShootRound(rounds, platform, roundStats) {
+    if (!roundStats.shot) {
+        const round = CreateRound(
+            platform.x,
+            80,
+        )
+        rounds.push(round)
+    
+        roundStats.shot = true;
+        setTimeout(() => {
+            roundStats.shot = false;
+        }, getRoundConfig().cooldown)
+    }
 }
   
 export function MoveRound(rounds) {
