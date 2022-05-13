@@ -9,6 +9,7 @@ function missileTemplate(xPosition, angle, homingMissilesStats) {
         y: 80,
         direction: createDirectionObject(angle, homingMissilesStats),
         speed: config.speed,
+        angleSpeed: toRad(config.angleSpeedDeg),
         lifespan: config.lifespan,
         fallSpeed: config.fallSpeed,
     }
@@ -38,6 +39,20 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
                 newMissile = missileTemplate(
                     platform.x - (homingMissilesStats.onScreen*20)/2 + i*20,
                     toRad(45 - angleIncrease*i))
+                if (homingMissilesStats.onScreen === 5) {
+                    if (i === 0 || i === 4) {
+                        newMissile.speed *= 2;
+                        newMissile.powerful = true;
+                    }
+                    else if (i === 1 || i === 3) {
+                        newMissile.speed *= 1.5;
+                        newMissile.mid = true;
+                    }
+                    // else if (i === 2) {
+                    //     newMissile.speed *= 3;
+                    //     newMissile.angleSpeed *= 10;
+                    // }
+                }
             }
             
             homingMissiles.push(newMissile);
@@ -91,7 +106,7 @@ function moveMissile(missile, targetPlate) {
     // update direction
     if (targetPlate) {
         let theta = getAngleToPlate(missile, targetPlate);
-        let rotationAngle = - getDeltaTheta(theta);
+        let rotationAngle = -Math.sign(theta) * Math.min(missile.angleSpeed, Math.abs(theta));
         rotateDirectionObject(missile.direction, rotationAngle);
     }
 
@@ -146,19 +161,6 @@ function getSignedAngle(mVec, pVec) {
         theta = -theta;
     }
     return theta
-}
-
-function getDeltaTheta(theta) {
-    let maxRotation = toRad(getHomingMissileConfig().angleSpeedDeg);
-    if (Math.abs(theta) > maxRotation) {
-        if (theta < 0) {
-            maxRotation = -maxRotation
-        }
-        return maxRotation
-    }
-    else {
-        return theta
-    }
 }
 
 function toRad(deg) {

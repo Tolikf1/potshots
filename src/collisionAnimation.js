@@ -8,10 +8,10 @@ export function CreateCollisionAnimation(x, y, width, msToLive) {
 }
 
 export function CollisionAnimationsTick(collisionAnimations) {
-    collisionAnimations.forEach((collisionAnimation, i) => {
-        collisionAnimation.framesLeft--
-        if (collisionAnimation.framesLeft <= 0) {
+    for (let i = 0; i < collisionAnimations.length; i++) {
+        collisionAnimations[i].framesLeft--
+        if (collisionAnimations[i].framesLeft <= 0) {
             collisionAnimations.splice(i, 1)
         }
-    })
+    }
 }

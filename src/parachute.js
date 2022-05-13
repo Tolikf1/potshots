@@ -34,7 +34,8 @@ export function CheckParachuteOutOfBounds(parachutes) {
 }
   
 export function parachuteCollision(rounds, parachutes, collisionAnimations, homingMissilesStats) {
-    parachutes.forEach((parachute, i) => {
+    for (let i = 0; i < parachutes.length; i++) {
+        const parachute = parachutes[i];
         let x1 = parachute.x;
         let y1 = parachute.y;
         let x2 = parachute.x - parachute.width/2;
@@ -43,7 +44,8 @@ export function parachuteCollision(rounds, parachutes, collisionAnimations, homi
         let y3 = y2;
         let parachuteArea = Math.abs((x2 - x1)*(y3 - y1) - (x3 - x1)*(y2 - y1));
 
-        rounds.forEach((round, j) => {
+        for (let j = 0; j < rounds.length; j++) {
+            const round = rounds[j];
             let area1 = Math.abs((x1 - round.x)*(y2 - round.y) - (x2 - round.x)*(y1 - round.y));
             let area2 = Math.abs((x2 - round.x)*(y3 - round.y) - (x3 - round.x)*(y2 - round.y));
             let area3 = Math.abs((x3 - round.x)*(y1 - round.y) - (x1 - round.x)*(y3 - round.y));
@@ -56,13 +58,15 @@ export function parachuteCollision(rounds, parachutes, collisionAnimations, homi
                     200,
                 ))
 
-                rounds.splice(j, 1)
-                parachutes.splice(i, 1)
-
                 homingMissilesStats.onScreen = Math.min(
                     homingMissilesStats.onScreen + 1,
                     getHomingMissileConfig().maxOnScreen)
+
+                rounds.splice(j, 1)
+                parachutes.splice(i, 1)
+                i--;
+                break;
             }
-        })
-    })
+        }
+    }
 }

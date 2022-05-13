@@ -41,7 +41,7 @@
   -webkit-user-drag: none;
   position: absolute;
   width: 3px;
-  height: 15px;
+  height: 0px;
   border-radius: 25%;
   background-color: red;
   transform: translate(0px, 30px);
@@ -189,6 +189,20 @@
   height: 15px;
   border-radius: 25%;
   background-color: red;
+  transform: translate(0px, 30px);
+  animation: MissilePulse;
+  animation-duration: 225ms;
+  animation-iteration-count: infinite;
+}
+
+.HomingMissile {
+  user-select: none;
+  -webkit-user-drag: none;
+  position: absolute;
+  width: 3px;
+  height: 15px;
+  border-radius: 25%;
+  background-color: yellow;
   transform: translate(0px, 30px);
   animation: MissilePulse;
   animation-duration: 225ms;

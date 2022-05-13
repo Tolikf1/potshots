@@ -2,7 +2,7 @@ round:
   speed: 15
   cooldown: 50
 homingMissile:
-  speed: 25  
+  speed: 25
   angleSpeedDeg: 7.5
   maxOnScreen: 5
   cooldown: 500
@@ -21,10 +21,6 @@ gameStages:
     plateConfig:
       - type: speed1
         count: 4
-  # - scoreToBeat: 5
-  #   plateConfig:
-  #     - type: speed1
-  #       count: 2
   - scoreToBeat: 20
     plateConfig:
       - type: speed2

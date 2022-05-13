@@ -3,7 +3,7 @@ import { createParachute } from "./parachute";
 import { CreateCollisionAnimation } from "./collisionAnimation";
 import { getParachuteConfig } from "./ConfigProvider";
 
-export function createPlate(x, y, width, flightDiretion, collisionAnimation, speed, horizontalSpeed, sprite) {
+export function createPlate(x, y, width, flightDiretion, collisionAnimation, speed, horizontalSpeed, sprite, flares, flaresCD, backfire, backfireCD) {
     return {
         x: x,
         y: y,
@@ -13,6 +13,10 @@ export function createPlate(x, y, width, flightDiretion, collisionAnimation, spe
         speed: speed,
         horizontalSpeed: horizontalSpeed,
         sprite: sprite,
+        flares: flares,
+        flaresCD: flaresCD,
+        backfire: backfire,
+        backfireCD: backfire
     }
 }
 
@@ -50,12 +54,13 @@ export function CreateNewPlate(plates, stats) {
         0,
         0,
         '',
+        false,
+        false
     )
 
     checkScore(stats, plate);
 
     plates.push(plate);
-    console.log(plates)
   }
 
 // Move a plate by SPEED every frame
@@ -67,14 +72,16 @@ export function PlateFlyAway(plates) {
 }
 
 export function CheckPlateOutOfBounds(plates, homingMissilesStats) {
-    plates.forEach((plate, i) => {
+    for (let i = 0; i < plates.length; i++) {
+        const plate = plates[i];
         if (plate.y > (window.innerHeight - plate.width)) {
             plates.splice(i, 1);
+            i--;
             homingMissilesStats.onScreen = Math.max(
                 homingMissilesStats.onScreen - 1,
                 1)
         }
-    })
+    }
 }
 
 export function DecrementPlateSize(plates) {
@@ -88,12 +95,14 @@ export function detectCollision(plates, rounds, stats, collisionAnimations, para
       stats.misses = 0;
     }
 
-    plates.forEach((plate, plateIndex) => {
+    for (let i = 0; i < plates.length; i++) {
+        const plate = plates[i];
         const plateCenterX = plate.x + plate.width/2;
         const plateCenterY = plate.y + plate.width/2;
         const plateWidthSquared = plate.width * plate.width;
 
-        rounds.forEach((round, roundIndex) => {
+        for (let j = 0; j < rounds.length; j++) {
+            const round = rounds[j];
             const centerToRoundX = plateCenterX - round.x;
             const centerToRoundY = plateCenterY - round.y;
             const centerToRoundDistance = centerToRoundX*centerToRoundX + centerToRoundY*centerToRoundY
@@ -109,14 +118,16 @@ export function detectCollision(plates, rounds, stats, collisionAnimations, para
                     200,
                 ))
 
-                rounds.splice(roundIndex, 1)
+                rounds.splice(j, 1)
                 let probabilityOfEjection = (Math.random()*100);
                 if (probabilityOfEjection <= getParachuteConfig().chance) {
                     createParachute(parachutes, plate);
                 }
 
-                plates.splice(plateIndex, 1)
+                plates.splice(i, 1)
+                i--;
+                break;
             }
-        })
-    })
+        }
+    }
 }

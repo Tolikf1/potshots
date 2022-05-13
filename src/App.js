@@ -26,6 +26,7 @@ import {
 import { CollisionAnimationsTick } from './collisionAnimation';
 import { gameManager } from './StageManager';
 import { createMissile, MoveHomingMissiles } from './homingMissile';
+import { createFlare, flareCollision, manageFlare } from './flares';
 
 export function App() {
   const forceRerender = useForceRerender();
@@ -55,6 +56,7 @@ export function App() {
     rounds: [],
     homingMissiles: [],
     plates: [],
+    flares: [],
     parachutes: [],
     collisionAnimations: [],
 
@@ -106,6 +108,7 @@ export function App() {
         rounds,
         homingMissiles,
         plates,
+        flares,
         parachutes,
         collisionAnimations,
         homingMissilesStats,
@@ -146,6 +149,13 @@ export function App() {
       MoveRound(rounds);
 
       MoveHomingMissiles(homingMissiles, plates, collisionAnimations)
+
+      manageFlare(flares);
+      flareCollision(flares, rounds, homingMissiles, collisionAnimations);
+
+      plates
+        .filter(p => p.flares)
+        .forEach(p => createFlare(p, flares));
       
       forceRerender();
     }, 1000/60);
@@ -164,6 +174,7 @@ export function App() {
     platform,
     rounds,
     plates,
+    flares,
     parachutes,
     collisionAnimations,
     homingMissiles,
@@ -224,14 +235,15 @@ export function App() {
           .filter(({x, y}) => 
             0 < x && x < window.innerWidth - 10
             && 20 < y && y < window.innerHeight)
-          .map(v => <div className='Round' style={{
+          .map((v, i) => <div className='HomingMissile' style={{
             display: "Block",
             left: v.x,
             bottom: v.y,
             height: v.lifespan/10,
             transform: `rotate(${-v.direction.angle}rad)`,
+            filter: `${v.powerful ? 'invert(100%)' : v.mid ? '' : 'hue-rotate(45deg)'}`,
         }}>
-          <img src='./missile.png' className='rocket'></img>
+          <img src='./missile.png' className='missileTail'></img>
         </div>)
       }
       {
@@ -244,6 +256,14 @@ export function App() {
             height: parachute.height,
           }}></img>
         )
+      }
+      {
+        flares.map(flare =>
+          <img src='./explosion1.png' className='destruction' style={{
+            left: flare.x,
+            bottom: flare.y,
+            width: flare.width,
+          }}></img>)
       }
     </div>
   );
