@@ -26,45 +26,51 @@ import {
 import { CollisionAnimationsTick } from './collisionAnimation';
 import { gameManager } from './StageManager';
 import { createMissile, MoveHomingMissiles } from './homingMissile';
-import { createFlare, flareCollision, manageFlare } from './flares';
+import { createFlare, flareCollision, getFlarePoints, manageFlare } from './flares';
+import { bombCollision, createBomb, moveBombs } from './backfire';
+
+const getInitialGameWorld = () => { return {
+  stats: {
+    score: 0,
+    stage: 0,
+    stageScore: 0,
+    lives: 3,
+    bombsHit: 0,
+
+    misses: 0,
+  },
+
+  homingMissilesStats: {
+    shot: false,
+    onScreen: 1,
+  },
+
+  roundStats: {
+    shot: false,
+  },
+  
+  platform: {
+    x: undefined
+  },
+
+  rounds: [],
+  homingMissiles: [],
+  plates: [],
+  flares: [],
+  bombs: [],
+  parachutes: [],
+  collisionAnimations: [],
+
+  keysPressedPrev: {},
+  keysPressed: {},
+
+  paused: false,
+}};
 
 export function App() {
   const forceRerender = useForceRerender();
 
-  const _gameWorld = useRef({
-    stats: {
-      score: 0,
-      stage: 0,
-      stageScore: 0,
-
-      misses: 0,
-    },
-
-    homingMissilesStats: {
-      shot: false,
-      onScreen: 1,
-    },
-
-    roundStats: {
-      shot: false,
-    },
-    
-    platform: {
-      x: undefined
-    },
-
-    rounds: [],
-    homingMissiles: [],
-    plates: [],
-    flares: [],
-    parachutes: [],
-    collisionAnimations: [],
-
-    keysPressedPrev: {},
-    keysPressed: {},
-
-    paused: false,
-  })
+  const _gameWorld = useRef(getInitialGameWorld())
 
   React.useEffect(() => {
     const keydownEventListener = e => {
@@ -97,9 +103,12 @@ export function App() {
         if (_gameWorld.current.keysPressed['KeyP'] === 'down' && 
           _gameWorld.current.keysPressedPrev['KeyP'] !== 'down') {
           _gameWorld.current.paused = !_gameWorld.current.paused;
+          forceRerender();
         }
       }
     }
+
+    let frame = 0;
 
     const intervalId = setInterval(() => {
       const {
@@ -109,12 +118,18 @@ export function App() {
         homingMissiles,
         plates,
         flares,
+        bombs,
         parachutes,
         collisionAnimations,
         homingMissilesStats,
         keysPressed,
         roundStats,
       } = _gameWorld.current;
+
+      // frame++;
+      // if (frame%4 !== 0) {
+      //   return;
+      // }
 
       Object.keys(keysPressed).forEach(key => {
         if (keyMappings[key]) {
@@ -125,6 +140,12 @@ export function App() {
 
 
       if (_gameWorld.current.paused) {
+        return;
+      }
+
+      if (_gameWorld.current.stats.lives <= 0) {
+        alert('what a lousy fucker you are...')
+        _gameWorld.current = getInitialGameWorld();
         return;
       }
 
@@ -148,10 +169,17 @@ export function App() {
 
       MoveRound(rounds);
 
-      MoveHomingMissiles(homingMissiles, plates, collisionAnimations)
+      MoveHomingMissiles(homingMissiles, plates, flares, collisionAnimations)
 
       manageFlare(flares);
       flareCollision(flares, rounds, homingMissiles, collisionAnimations);
+
+      plates
+        .filter(p => p.backfire)
+        .forEach(p => createBomb(p, bombs));
+
+      moveBombs(bombs, platform, stats, collisionAnimations);
+      bombCollision(bombs, rounds, homingMissiles, collisionAnimations, stats);
 
       plates
         .filter(p => p.flares)
@@ -175,13 +203,16 @@ export function App() {
     rounds,
     plates,
     flares,
+    bombs,
     parachutes,
     collisionAnimations,
     homingMissiles,
     homingMissilesStats,
+    paused,
   } = _gameWorld.current;
 
   return (
+    <>
     <div className="Container"
       onMouseMove={(e) => {
         if (e.clientX > 50 && e.clientX < (window.innerWidth - 50)) {
@@ -189,9 +220,12 @@ export function App() {
         }
       }}
       >
+      <div className='Background'></div>
       <div className='score'>
         <div>Score: {stats.score}</div>
         <div>Missiles: {homingMissilesStats.onScreen}</div>
+        <div>Stage {stats.stage + 1}</div>
+        <div>Lives {stats.lives}</div>
         <div>Highscore {localStorage.getItem('highscore')}</div>
       </div>
       <div className='Platform' style={{left: platform.x - 25}}>
@@ -199,7 +233,11 @@ export function App() {
         <div className={`Gun`}></div>
       </div>
       {
-        plates.map((plate) =>
+        plates
+        .filter(({x, y}) => 
+            0 < x && x < window.innerWidth - 10
+            && 20 < y && y < window.innerHeight)
+            .map((plate) =>
           <div className="Plate" style={
               {
                 left: plate.x - plate.width/2,
@@ -259,13 +297,63 @@ export function App() {
       }
       {
         flares.map(flare =>
-          <img src='./explosion1.png' className='destruction' style={{
-            left: flare.x,
-            bottom: flare.y,
-            width: flare.width,
-          }}></img>)
+          <>
+          <div className='destruction' style={{
+              left: flare.x,
+              bottom: flare.y,
+              width: 5,
+              height: 5,
+            }}>
+          </div>
+          {
+            getFlarePoints(flare).map((p, i) => 
+              <div className={`test`} style={{
+                left: p[0],
+                bottom: p[1],
+                // width: 1 + i/4,
+                // height: 1 + i/4
+                width: 1 + p[2] * 2,
+                height: 1 + p[2] * 2,
+                opacity: flare.lifespan / 60
+              }}></div>)
+          }
+          </>
+          )
+      }
+      {
+        bombs
+          .filter(({x, y}) => 
+            0 < x && x < window.innerWidth - 10
+            && 20 < y && y < window.innerHeight)
+            .map(bomb =>
+          <div className={`Direction${bomb.direction} bomb`} style={{
+              left: bomb.x,
+              bottom: bomb.y,
+              width: 20,
+              height: 10,
+            }}>
+            <img src='./bomb.png' className='bomb' style={{
+              width: 20,
+              height: 10,
+              transform: `scaleX(${bomb.direction})`
+            }}></img>
+          </div>
+          )
       }
     </div>
+      {
+        paused &&
+        <div className='pausedContainer'>
+          <div className='pauseWindow'>
+            <div>Game paused</div>
+            <div>press P to continue</div>
+          </div>
+        </div>
+      }
+    {/* <div className='effect'>
+
+    </div> */}
+    </>
   );
 }
 

@@ -12,7 +12,7 @@ export function ShootRound(rounds, platform, roundStats) {
     if (!roundStats.shot) {
         const round = CreateRound(
             platform.x,
-            80,
+            40,
         )
         rounds.push(round)
     

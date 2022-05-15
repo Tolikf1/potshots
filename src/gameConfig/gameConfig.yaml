@@ -1,12 +1,13 @@
 round:
   speed: 15
-  cooldown: 50
+  cooldown: 100
+  maxOnScreen: 5
 homingMissile:
   speed: 25
   angleSpeedDeg: 7.5
   maxOnScreen: 5
   cooldown: 500
-  lifespan: 45
+  lifespan: 55
   fallSpeed: 
     x: 0.5
     y: 2
@@ -14,7 +15,7 @@ homingMissile:
 parachute:
   xSpeed: 3
   ySpeed: 1
-  chance: 20
+  chance: 10
 
 gameStages:
   - scoreToBeat: 20
@@ -35,14 +36,34 @@ gameStages:
     plateConfig:
       - type: speed3
         count: 1
+  - scoreToBeat: 80
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 1
+  - scoreToBeat: 100
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed3
+        count: 2
+  - scoreToBeat: 30
+    plateConfig:
+      - type: speed4
+        count: 2
   - scoreToBeat: -1
     plateConfig:
       - type: speed4
         count: 1
-      - type: speed1
+      - type: speed3
         count: 1
       - type: speed2
         count: 1
+      - type: speed1
+        count: 2
 
 plateTypes:
   speed1:
@@ -58,7 +79,7 @@ plateTypes:
     horizontalSpeed: 2
     sprite: ./speed3.png
   speed4:
-    speed: 12
-    horizontalSpeed: 1
+    speed: 0
+    horizontalSpeed: 5
     sprite: ./speed4.png
 

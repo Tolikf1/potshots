@@ -74,7 +74,10 @@ export function PlateFlyAway(plates) {
 export function CheckPlateOutOfBounds(plates, homingMissilesStats) {
     for (let i = 0; i < plates.length; i++) {
         const plate = plates[i];
-        if (plate.y > (window.innerHeight - plate.width)) {
+        if (plate.y > (window.innerHeight - plate.width) ||
+        plate.x > (window.innerWidth - plate.width) ||
+        plate.x < plate.width) {
+            console.log('cut it')
             plates.splice(i, 1);
             i--;
             homingMissilesStats.onScreen = Math.max(
@@ -86,6 +89,9 @@ export function CheckPlateOutOfBounds(plates, homingMissilesStats) {
 
 export function DecrementPlateSize(plates) {
     plates.forEach(plate => {
+        if (plate.sprite === './speed4.png') {
+            return
+        }
         plate.width -= plate.y / (2 * window.innerHeight)
     })
 }

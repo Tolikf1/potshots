@@ -67,7 +67,7 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
 }
 
 // missile. plates[] -> targetPLate
-export function detectTarget(missile, plates) {
+export function detectTarget(missile, plates, flares) {
     let targetPlate = null;
     let minimalCost = Infinity;
     plates.forEach(plate => {
@@ -79,15 +79,26 @@ export function detectTarget(missile, plates) {
             targetPlate = plate;
         }
     })
+    flares.forEach(flare => {
+        const centerX = flare.x -flare.width * flare.direction / 2;
+        const centerY = flare.y -flare.width*Math.sin(Math.Pi/3)/2;
+        const distance = (flare.x - missile.x)**2 + (flare.y - missile.y)**2;
+        const angle = Math.abs(getAngleToPlate(missile, flare));
+        const cost = distance * angle**2;
+        if (cost < minimalCost) {
+            minimalCost = cost;
+            targetPlate = flare;
+        }
+    })
     
     return targetPlate;
 }
 
-export function MoveHomingMissiles(homingMissiles, plates, collisionAnimations) {
+export function MoveHomingMissiles(homingMissiles, plates, flares, collisionAnimations) {
     homingMissiles.forEach((missile, index) => {
         missile.lifespan--;
         if (missile.lifespan > 0) {
-            const currentTarget = detectTarget(missile, plates);
+            const currentTarget = detectTarget(missile, plates, flares);
             moveMissile(missile, currentTarget);
         }
         else {

@@ -5,19 +5,22 @@ export function createFlare(plate, flares) {
         plate.flaresCD--
     }
     else {
-        const flare = flareTemplate(plate.x, plate.y, plate.direction)
+        const flare = flareTemplate(
+            plate.x + plate.width / 2 * plate.flightDiretion, 
+            plate.y, 
+            plate.flightDiretion)
         flares.push(flare);
-        plate.flaresCD = 30;
+        plate.flaresCD = 20;
     }
 }
 
-function flareTemplate(x, y) {
+function flareTemplate(x, y, direction) {
     return {
         x: x,
         y: y,
         width: 10,
         lifespan: 60,
-        direction: 1,
+        direction: -direction,
     }
 }
 
@@ -39,14 +42,14 @@ export function flareCollision(flares, rounds, homingMissiles, collisionAnimatio
     for (let i = 0; i < flares.length; i++) {
         const projectile = collidingOneOfProjectiles(flares[i], rounds, homingMissiles);
         if (projectile) {
-            flares.splice(i, 1);
-            i--;
             collisionAnimations.push(CreateCollisionAnimation(
                 projectile.x,
                 projectile.y,
                 flares[i].width,
                 200,
             ));
+            flares.splice(i, 1);
+            i--;
             continue;
         }
     }
@@ -65,11 +68,11 @@ function collidingOneOfProjectiles(flare, ...projectileArrays) {
 
 function isColliding(flare, projectile) {
     const x1 = flare.x;
-    const x2 = x1 + flare.direction * flare.width;
-    const x3 = x1 +  flare.direction * flare.width * Math.cos(Math.PI / 3);
+    const x2 = x1 + -flare.direction * flare.width;
+    const x3 = x1 +  -flare.direction * flare.width;
     const y1 = flare.y;
     const y2 = y1;
-    const y3 = y1 - flare.width * Math.sin(Math.Pi / 3);
+    const y3 = y1 - flare.width * Math.sin(Math.PI / 3);
     const flareArea = Math.abs((x2 - x1)*(y3 - y1) - (x3 - x1)*(y2 - y1));
 
     let area1 = Math.abs(
@@ -83,4 +86,32 @@ function isColliding(flare, projectile) {
         return true;
     }
     return false
+}
+
+export function getFlarePoints(flare) {
+    const x1 = flare.x;
+    const x2 = flare.x + -flare.width * flare.direction;
+    const w = x1 - x2;
+    const y1 = flare.y;
+    const y2 = flare.y - flare.width*Math.sin(Math.PI/3);
+    const h = y1 - y2;
+
+    const n_x = 5;
+    const n_y = 4;
+    
+    const xCoords = range(n_x)
+        .map(i => x1 - i * w / (n_x-1))
+    
+    const hPerLine = range(n_y)
+        .map(i => i * h / (n_y-1))
+
+    const points = hPerLine.map(
+        h => xCoords.map((x, i) => [x, y1 - h * (i/(n_x-1)), i/(n_x-1)]))
+        .flat()
+
+    return points;
+}
+
+function range(n) {
+    return [...Array(n).keys()]
 }
