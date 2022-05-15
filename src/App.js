@@ -65,6 +65,13 @@ const getInitialGameWorld = () => { return {
   keysPressed: {},
 
   paused: false,
+
+  screenEffect: {
+    present: false,
+    type: null,
+    ttl: 0,
+    maxTtl: 0,
+  }
 }};
 
 export function App() {
@@ -124,6 +131,7 @@ export function App() {
         homingMissilesStats,
         keysPressed,
         roundStats,
+        screenEffect,
       } = _gameWorld.current;
 
       // frame++;
@@ -178,12 +186,22 @@ export function App() {
         .filter(p => p.backfire)
         .forEach(p => createBomb(p, bombs));
 
-      moveBombs(bombs, platform, stats, collisionAnimations);
-      bombCollision(bombs, rounds, homingMissiles, collisionAnimations, stats);
+      moveBombs(bombs, platform, stats, collisionAnimations, screenEffect);
+      bombCollision(bombs, rounds, homingMissiles, collisionAnimations, stats, screenEffect);
 
       plates
         .filter(p => p.flares)
         .forEach(p => createFlare(p, flares));
+
+      // manage screen effects
+      if (screenEffect.present) {
+        screenEffect.ttl--
+        if (screenEffect.ttl <= 0) {
+          screenEffect.present = false
+          screenEffect.type = ''
+          screenEffect.maxTtl = 0
+        }
+      }
       
       forceRerender();
     }, 1000/60);
@@ -209,6 +227,7 @@ export function App() {
     homingMissiles,
     homingMissilesStats,
     paused,
+    screenEffect,
   } = _gameWorld.current;
 
   return (
@@ -350,9 +369,17 @@ export function App() {
           </div>
         </div>
       }
-    {/* <div className='effect'>
-
-    </div> */}
+      {
+        screenEffect.present &&        
+        <div className='effect' style={{
+          backgroundColor: screenEffect.type === '+life'
+            ? `rgba(0,255,0,${screenEffect.ttl/screenEffect.maxTtl * 0.15})`
+            : screenEffect.type === '-life'
+            ? `rgba(255,0,0,${screenEffect.ttl/screenEffect.maxTtl * 0.15})`
+            : ''
+        }}>
+        </div>
+      }
     </>
   );
 }

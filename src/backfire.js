@@ -28,7 +28,7 @@ function bombTemplate(x, y, direction) {
     }
 }
 
-export function moveBombs(bombs, platform, stats, collisionAnimations) {
+export function moveBombs(bombs, platform, stats, collisionAnimations, screenEffect) {
     for (let i = 0; i < bombs.length; i++) {
         const bomb = bombs[i];
         if (bomb.y < 10) {
@@ -40,6 +40,10 @@ export function moveBombs(bombs, platform, stats, collisionAnimations) {
             ))
             if (Math.abs(bomb.x - platform.x) < 35) {
                 stats.lives--
+                screenEffect.present = true
+                screenEffect.type = '-life'
+                screenEffect.ttl = 15
+                screenEffect.maxTtl = 15
             }
             bombs.splice(i, 1)
             i--;
@@ -50,7 +54,7 @@ export function moveBombs(bombs, platform, stats, collisionAnimations) {
     }
 }
 
-export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations, stats) {
+export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations, stats, screenEffect) {
     for (let i = 0; i < bombs.length; i++) {
         const projectile = collidingOneOfProjectiles(bombs[i], rounds, homingMissiles);
         if (projectile) {
@@ -64,6 +68,10 @@ export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations
             if (stats.bombsHit == 100) {
                 stats.lives++
                 stats.bombsHit = 0
+                screenEffect.present = true
+                screenEffect.type = '+life'
+                screenEffect.ttl = 15
+                screenEffect.maxTtl = 15
             }
             bombs.splice(i, 1);
             i--;

@@ -48,10 +48,12 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
                         newMissile.speed *= 1.5;
                         newMissile.mid = true;
                     }
-                    // else if (i === 2) {
-                    //     newMissile.speed *= 3;
-                    //     newMissile.angleSpeed *= 10;
-                    // }
+                }
+                else if (homingMissilesStats.onScreen === 3 || homingMissilesStats.onScreen === 4) {
+                    if (i === 0 || i === homingMissilesStats.onScreen-1) {
+                        newMissile.speed *= 1.5;
+                        newMissile.mid = true;
+                    }
                 }
             }
             
