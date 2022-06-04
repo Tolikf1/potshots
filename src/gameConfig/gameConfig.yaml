@@ -15,9 +15,15 @@ homingMissile:
 parachute:
   xSpeed: 3
   ySpeed: 1
-  chance: 10
+  chance: 40
 
 gameStages:
+  - scoreToBeat: boss
+    # plateConfig:
+    #   - type: speed1
+    #     count: 2
+    #   - type: speed4
+    #     count: 1
   - scoreToBeat: 20
     plateConfig:
       - type: speed1
@@ -83,3 +89,18 @@ plateTypes:
     horizontalSpeed: 5
     sprite: ./speed4.png
 
+boss:
+  speedY: 0
+  speedX: 0
+  sprites:
+    body: ./boss1_body.png
+    wing: ./boss1_wing.png
+    roundLauncher: ./boss1_roundLauncher.png
+    missileLauncher: ./boss1_missileLauncher.png
+  hp:
+    boss: 400
+    wing: 50
+    roundLauncher: 50
+  behaviorHpPercentages:
+    diagonal: 0.66
+    seeking: 0.33

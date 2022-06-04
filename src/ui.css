@@ -1,0 +1,254 @@
+.container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(154, 154, 90);
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonSelector {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 210, 52);
+    border-radius: 5px;
+    height: 50px;
+    width: 200px;
+    margin-bottom: 5px;
+
+}
+
+.button:hover {
+    transition: 200ms;
+    background-color: rgb(230, 227, 56);
+    user-select: none;
+}
+
+.button:active {
+    transition: 200ms;
+    background-color: rgb(162, 160, 53);
+    user-select: none;
+}
+
+.hintsButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 210, 52);
+    border-radius: 5px;
+    height: 50px;
+    width: 200px;
+    margin-bottom: 5px;
+
+}
+
+.hintsButton:hover {
+    transition: 200ms;
+    background-color: rgb(230, 227, 56);
+    user-select: none;
+}
+
+.hintsButton:active {
+    transition: 200ms;
+    background-color: rgb(162, 160, 53);
+    user-select: none;
+}
+
+.hints {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 220px;
+    user-select: none;
+    opacity: 0.6;
+}
+
+@keyframes showHints {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    75% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.hintsRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    min-width: 400px;
+    background-color: rgb(230, 227, 56);
+    border-radius: 5px;
+    margin-bottom: 5px;
+    animation: showHints;
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+}
+
+.awesomePadding {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.infoIconRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.infoIcon {
+    padding: 5px;
+    margin-left: 5px;
+    background-color: darkgreen;
+    border-radius: 50%;
+    animation: pulse;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    25% {
+        opacity: 0.75;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    75% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.infoIcon:hover {
+    animation: none;
+}
+
+.legalInformationBox {
+    position: absolute;
+    transform: translate(-180px, 15px);
+    visibility: hidden;
+    opacity: 0;
+}
+
+.legalInformation {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: fit-content;
+    background-color: rgb(167, 165, 52);
+    padding: 10px 30px;
+    border-radius: 5px;
+}
+
+.infoIconRow:hover .legalInformationBox {
+    opacity: 1;
+    visibility: visible;
+    transition: 200ms;
+}
+
+.infoIconRow:hover .infoIcon {
+    animation: none;
+}
+
+.highScoreBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 210, 52);
+    border-radius: 5px;
+    height: 100px;
+    width: 200px;
+    margin-bottom: 5px;
+}
+
+.inputForm {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    height: 18px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+  }
+  
+  .inputformline {
+    border: solid 2px;
+    border-color: #6f4bf1;
+    border-radius: 5px;
+  }
+  
+  :focus-visible {
+    border-width: 2px;
+    outline: none;
+  }
+
+ input[type="text"], textarea {
+    background-color: #e7e717;
+    color: rgb(22, 22, 236);
+    padding-left: 3px;
+  }
+  
+  input::placeholder {
+    padding-left: 2px;
+    color: rgb(177, 175, 175);
+  }
+  
+  input[type="text"]:-webkit-autofill {
+    -webkit-text-fill-color: gainsboro;
+    -webkit-box-shadow: 0 0 0px 1000px #1f2125 inset;
+  }
+
+  .setButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 15px;
+    width: 35px;
+    padding: 5px;
+    background-color: #6f4bf1;
+    margin: 5px 0px;
+    border-radius: 5px;
+  }
+
+  .setButton:hover {
+    background-color: #7e60ea; 
+  }
+
+  .setButton:active {
+    background-color: #4719ec; 
+  }

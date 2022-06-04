@@ -69,38 +69,36 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
 }
 
 // missile. plates[] -> targetPLate
-export function detectTarget(missile, plates, flares) {
-    let targetPlate = null;
-    let minimalCost = Infinity;
-    plates.forEach(plate => {
-        const distance = (plate.x - missile.x)**2 + (plate.y - missile.y)**2;
-        const angle = Math.abs(getAngleToPlate(missile, plate));
-        const cost = distance * angle**2;
-        if (cost < minimalCost) {
-            minimalCost = cost;
-            targetPlate = plate;
-        }
-    })
-    flares.forEach(flare => {
-        const centerX = flare.x -flare.width * flare.direction / 2;
-        const centerY = flare.y -flare.width*Math.sin(Math.Pi/3)/2;
-        const distance = (flare.x - missile.x)**2 + (flare.y - missile.y)**2;
-        const angle = Math.abs(getAngleToPlate(missile, flare));
-        const cost = distance * angle**2;
-        if (cost < minimalCost) {
-            minimalCost = cost;
-            targetPlate = flare;
-        }
-    })
-    
-    return targetPlate;
+export function detectTarget(missile, targets) {
+    const costCoordinates = targetsToCost(missile, targets)
+
+    if (!costCoordinates.length)
+        return null;
+
+    const costs = costCoordinates.map(({cost}) => cost);
+    const minCost = Math.min(...costs);
+    const minCostIndex = costs.indexOf(minCost);
+
+    return costCoordinates[minCostIndex];
 }
 
-export function MoveHomingMissiles(homingMissiles, plates, flares, collisionAnimations) {
+// targetsToCost returns an array of {x, y, cost}
+// getCoordinates takes a target and returns {x, y}
+function targetsToCost(missile, targets) {
+    return targets.map(target => {
+        const {x, y} = target;
+        const distance = (x - missile.x)**2 + (y - missile.y)**2;
+        const angle = Math.abs(getAngleToPlate(missile, target));
+        const cost = distance * angle**2;
+        return { x: x, y: y, cost: cost };
+    })
+}
+
+export function MoveHomingMissiles(homingMissiles, collisionAnimations, ...targets) {
     homingMissiles.forEach((missile, index) => {
         missile.lifespan--;
         if (missile.lifespan > 0) {
-            const currentTarget = detectTarget(missile, plates, flares);
+            const currentTarget = detectTarget(missile, targets.flat());
             moveMissile(missile, currentTarget);
         }
         else {
@@ -128,7 +126,7 @@ function moveMissile(missile, targetPlate) {
     missile.y = missile.y + missile.direction.y * missile.speed;
 }
 
-function rotateDirectionObject(direction, rotationAngle) {
+export function rotateDirectionObject(direction, rotationAngle) {
     const mDir = {...direction}
 
     direction.angle += rotationAngle;
@@ -176,6 +174,6 @@ function getSignedAngle(mVec, pVec) {
     return theta
 }
 
-function toRad(deg) {
+export function toRad(deg) {
     return deg * Math.PI / 180;
 }

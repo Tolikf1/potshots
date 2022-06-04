@@ -1,4 +1,5 @@
 import { CreateCollisionAnimation } from "./collisionAnimation";
+import { SetScreenEffect } from "./utils";
 
 export function createBomb(plate, bombs) {
     if (plate.backfireCD !== 0) {
@@ -40,10 +41,7 @@ export function moveBombs(bombs, platform, stats, collisionAnimations, screenEff
             ))
             if (Math.abs(bomb.x - platform.x) < 35) {
                 stats.lives--
-                screenEffect.present = true
-                screenEffect.type = '-life'
-                screenEffect.ttl = 15
-                screenEffect.maxTtl = 15
+                SetScreenEffect(screenEffect, '-life', 15)
             }
             bombs.splice(i, 1)
             i--;
@@ -68,10 +66,8 @@ export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations
             if (stats.bombsHit == 100) {
                 stats.lives++
                 stats.bombsHit = 0
-                screenEffect.present = true
-                screenEffect.type = '+life'
-                screenEffect.ttl = 15
-                screenEffect.maxTtl = 15
+
+                SetScreenEffect(screenEffect, '+life', 15)
             }
             bombs.splice(i, 1);
             i--;

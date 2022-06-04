@@ -77,12 +77,10 @@ export function CheckPlateOutOfBounds(plates, homingMissilesStats) {
         if (plate.y > (window.innerHeight - plate.width) ||
         plate.x > (window.innerWidth - plate.width) ||
         plate.x < plate.width) {
-            console.log('cut it')
             plates.splice(i, 1);
             i--;
             homingMissilesStats.onScreen = Math.max(
-                homingMissilesStats.onScreen - 1,
-                1)
+                homingMissilesStats.onScreen - 1, 0)
         }
     }
 }

@@ -1,4 +1,6 @@
 import { createBomb } from './backfire';
+import { createBoss } from './boss';
+import { CreateCollisionAnimation } from './collisionAnimation';
 import { getGameStages, getPlateTypes } from './ConfigProvider';
 import { createFlare } from './flares';
 
@@ -12,19 +14,48 @@ export function gameManager(gameWorld) {
         bombs,
         parachutes,
         collisionAnimations,
+        bossStats,
     } = gameWorld;
 
-    let existingPlateTypesCount = {}
-    plates.forEach(({type}) => 
-        existingPlateTypesCount[type] = 1 + (existingPlateTypesCount[type] ?? 0))
+    let currentStage = getStageConfig(stats);
+    let plateConfig = getPlateConfig(currentStage);
 
-    let plateConfig = getPlateConfig(stats);
-    plateConfig.forEach(({type, count}) => {
-        let presentSpritesCount = existingPlateTypesCount[type] ?? 0
-        for (let i = 0; i < (count - presentSpritesCount); i++) {
-            CreateNewPlate(getPlateTypes()[type], plates, flares, bombs)
+    if (currentStage.scoreToBeat === 'boss') {
+        if (!bossStats.dead && !bossStats.boss) {
+            createBoss(bossStats)
+            bossStats.dead = false
+            bossStats.boss.width = 1
+        } 
+        else if (bossStats.dead) {
+            stats.stage++
+            bossStats.dead = false
+            bossStats.boss = null
         }
-    })
+        else {
+            if (bossStats.boss.width < 100) {
+                const step = 75 * (bossStats.boss.width/100)**2
+                bossStats.boss.width = Math.min(
+                    bossStats.boss.width + step,
+                    100
+                )
+            }
+            else {
+                bossStats.arrived = true
+            }
+        }
+    }
+    if (plateConfig) {
+        let existingPlateTypesCount = {}
+        plates.forEach(({type}) => 
+            existingPlateTypesCount[type] = 1 + (existingPlateTypesCount[type] ?? 0))
+
+        plateConfig.forEach(({type, count}) => {
+            let presentSpritesCount = existingPlateTypesCount[type] ?? 0
+            for (let i = 0; i < (count - presentSpritesCount); i++) {
+                CreateNewPlate(getPlateTypes()[type], plates, flares, bombs)
+            }
+        })
+    }
 }
 
 // plateTemplate -> [ ] -> newPlate
@@ -40,16 +71,14 @@ function CreateNewPlate(plateTemplate, plates, flares, bombs) {
         backfireCD = 10
         willBackfire = true;
         if (side > 0.5) {
-            console.log('a')
             x = window.innerWidth - 85
         }
         else {
-            console.log('b')
             x = 85
         } 
         y =  window.innerHeight - 100;
     }
-    
+
     const plate = {
         x: x,
         y: y,
@@ -61,23 +90,25 @@ function CreateNewPlate(plateTemplate, plates, flares, bombs) {
         backfire: willBackfire,
         backfireCD: backfireCD,
     };
-    console.log(plate);
     if (willDeployFlares) {
         createFlare(plate, flares);
     }
     if (willBackfire) {
         createBomb(plate, bombs);
     }
-    console.log('pushed')
     plates.push(plate);
 }
 
-function getPlateConfig(stats) {
+function getStageConfig(stats) {
     let currentStage = getGameStages()[stats.stage]
     if (currentStage.scoreToBeat != -1 && currentStage.scoreToBeat <= stats.stageScore) {
         stats.stage++
         stats.stageScore %= currentStage.scoreToBeat
         currentStage = getGameStages()[stats.stage]
     }
-    return currentStage.plateConfig
+    return currentStage
+}
+
+function getPlateConfig(stage) {
+    return stage.plateConfig
 }

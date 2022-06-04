@@ -14,7 +14,7 @@ export function createFlare(plate, flares) {
     }
 }
 
-function flareTemplate(x, y, direction) {
+export function flareTemplate(x, y, direction) {
     return {
         x: x,
         y: y,

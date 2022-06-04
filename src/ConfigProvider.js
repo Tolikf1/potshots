@@ -34,3 +34,7 @@ export function getHomingMissileConfig() {
 export function getParachuteConfig() {
     return config.parachute
 }
+
+export function getBossConfig() {
+    return config.boss
+}
