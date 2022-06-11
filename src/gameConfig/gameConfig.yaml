@@ -18,12 +18,6 @@ parachute:
   chance: 40
 
 gameStages:
-  - scoreToBeat: boss
-    # plateConfig:
-    #   - type: speed1
-    #     count: 2
-    #   - type: speed4
-    #     count: 1
   - scoreToBeat: 20
     plateConfig:
       - type: speed1
@@ -60,7 +54,8 @@ gameStages:
     plateConfig:
       - type: speed4
         count: 2
-  - scoreToBeat: -1
+  - scoreToBeat: boss
+  - scoreToBeat: 200
     plateConfig:
       - type: speed4
         count: 1
@@ -70,6 +65,13 @@ gameStages:
         count: 1
       - type: speed1
         count: 2
+  - scoreToBeat: boss
+    plateConfig:
+      - type: speed1
+        count: 2
+      - type: speed4
+        count: 1
+        
 
 plateTypes:
   speed1:

@@ -7,13 +7,24 @@
     background-color: rgb(154, 154, 90);
     user-select: none;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bolder;
+    color: rgb(2, 91, 32);
+    font-family: 'Courier New', Courier, monospace;
+    padding-bottom: 50px;
+}
+
 .buttonSelector {
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;

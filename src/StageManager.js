@@ -18,6 +18,11 @@ export function gameManager(gameWorld) {
     } = gameWorld;
 
     let currentStage = getStageConfig(stats);
+    if (!currentStage) {
+        gameWorld.endScreen = true
+        return
+    }
+
     let plateConfig = getPlateConfig(currentStage);
 
     if (currentStage.scoreToBeat === 'boss') {
@@ -101,6 +106,9 @@ function CreateNewPlate(plateTemplate, plates, flares, bombs) {
 
 function getStageConfig(stats) {
     let currentStage = getGameStages()[stats.stage]
+    if (!currentStage) {
+        return null
+    }
     if (currentStage.scoreToBeat != -1 && currentStage.scoreToBeat <= stats.stageScore) {
         stats.stage++
         stats.stageScore %= currentStage.scoreToBeat

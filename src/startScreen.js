@@ -5,6 +5,9 @@ export function StartScreen({setStartScreen}) {
     const [hintsHidden, updateHintsHidden] = React.useState(false)
     return <>
         <div className='container'>
+            <div>
+                <div className='title'>POTSHOTS</div>
+            </div>
             <div className='buttonSelector'>
                 <div className='button' onClick={() => {
                     setStartScreen(false)

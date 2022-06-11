@@ -23,9 +23,6 @@ export function createBoss(bossStats) {
             0, 
             () => {
                 boss.hp--
-                if (boss.hp <= 0) {
-                    bossStats.dead = true
-                }
             }),
         cannonCooldown: 180,
         roundsCooldown: 320,
@@ -138,11 +135,10 @@ function createHitBox(widthFunc, heightFunc,
     return box
 }
 
-export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, platform) {
-    // console.log(boss)
+export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, platform, collisionAnimations, bossStats) {
     const bossBodyRect = getBossBodyRect(boss)
 
-    bossMove(boss, platform);
+    bossMove(boss, platform, collisionAnimations, bossStats);
 
     moveBullet(bullets)
     moveBossRounds(boss_rounds)
@@ -286,6 +282,20 @@ export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, pl
             }}></div>)
         }
         {
+            <div className="bossHPbox" style={{
+                left: boss.x - 20,
+                bottom: boss.y - 3,
+                width: boss.width * 0.4,
+                height: 0.15 * boss.width,
+            }}>
+                <div className="bossHP" style={{
+                    width: 0.4 * boss.width * boss.hp / 400,
+                    height: 0.2 * boss.width,
+                    filter: `hue-rotate(${180 + 180 * boss.hp / 400}deg)`  
+                }}></div>
+            </div>
+        }
+        {
             bullets.map(bullet => 
             <div className="bullet" style={{
                 left: bullet.x,
@@ -366,7 +376,6 @@ function renderWingHitboxes(wing, wingName) {
 }
 
 export function bossCollision(rounds, bossStats) {
-    console.log(bossStats.boss)
     const boss = bossStats.boss;
     let hitBoxes = getBossHitboxes(boss)
 
@@ -573,7 +582,7 @@ export function checkMissileCollision(boss_missiles, platform, stats, collisionA
     }
 }
 
-function bossMove(boss, platform) {
+function bossMove(boss, platform, collisionAnimations, bossStats) {
     const hpPercentage = boss.hp / getBossConfig().hp.boss;
     const behaviorHpPercentages = getBossConfig().behaviorHpPercentages;
 
@@ -646,6 +655,18 @@ function bossMove(boss, platform) {
         }
         else {
             boss.stationaryTime--
+        }
+    }
+    if (boss.hp <= 0) {
+        boss.x +=boss.direction
+        boss.y -= 5
+        let collisionX = Math.random() * boss.width / 2
+        let collisionY = Math.random() * boss.width / 2
+        collisionAnimations.push(CreateCollisionAnimation(boss.x + collisionX, boss.y + collisionY, 50, 200))
+
+        if (boss.y <= 20) {
+            collisionAnimations.push(CreateCollisionAnimation(boss.x - 200, boss.y - 200, 400, 200))
+            setTimeout(bossStats.dead = true, 400)
         }
     }
 }

@@ -302,7 +302,9 @@ export function App() {
             }
           }}
           >
-          <div className='Background'></div>
+          <div className='Background'>
+            <img src='./background.png'></img>
+          </div>
           <div className='score'>
             <div>Score: {stats.score}</div>
             <div>Missiles: {homingMissilesStats.onScreen}</div>
@@ -376,6 +378,7 @@ export function App() {
                 bottom: parachute.y,
                 width: parachute.width,
                 height: parachute.height,
+                filter: 'invert(0.9)'
               }}></img>
             )
           }
@@ -425,7 +428,7 @@ export function App() {
               )
           }
           {
-            bossStats.boss && renderBoss(bossStats.boss, bullets, boss_rounds, boss_missiles, flares, platform)
+            bossStats.boss && renderBoss(bossStats.boss, bullets, boss_rounds, boss_missiles, flares, platform, collisionAnimations, bossStats)
           }
         </div>
         {

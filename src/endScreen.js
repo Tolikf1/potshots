@@ -6,6 +6,16 @@ export function EndScreen({setStartScreen, initializeGameWorld, stats , forceRer
     const [name, updateName] = React.useState(false)
     return <>
         <div className='container'>
+            {
+                !stats.lives &&
+                <div>
+                    <div className='title'>WELL, AT LEAST YOU TRIED...</div>
+                </div>
+                ||
+                <div>
+                    <div className='title'>CONGRATS</div>
+                </div>
+            }
             <div className='buttonSelector'>
                 <div className='button' onClick={() => {
                     initializeGameWorld(getInitialGameWorld())
