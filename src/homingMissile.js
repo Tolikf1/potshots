@@ -1,5 +1,6 @@
 import { CreateCollisionAnimation } from "./collisionAnimation";
 import { getHomingMissileConfig } from "./ConfigProvider";
+import { Howl} from "howler";
 
 // xPosition -> [] -> missileTemplate
 function missileTemplate(xPosition, angle, homingMissilesStats) {
@@ -59,6 +60,13 @@ export function createMissile(platform, homingMissiles, homingMissilesStats) {
             
             homingMissiles.push(newMissile);
         }
+
+        const effect = new Howl({
+            src: ['round.wav'],
+            html5: true,
+            volume: 0.25,
+        })
+        effect.play()
 
         homingMissilesStats.shot = true;
         setTimeout(() => {

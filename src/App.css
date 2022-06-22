@@ -181,18 +181,45 @@
   position: absolute;
 }
 
+.time {
+  user-select: none;
+  -webkit-user-drag: none;
+  position: absolute;
+  right: 5px;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  justify-content: space-around;
+  align-items: flex-end;
+  font-size: 14px;
+  height: fit-content;
+  padding: 5px;
+  color: blue;
+  border-radius: 5px;
+}
+
 .score {
   user-select: none;
   -webkit-user-drag: none;
   position: absolute;
+  left: 5px;
   display: flex;
-  flex-direction: row;
-  width: 250px;
+  flex-direction: column;
+  width: fit-content;
   justify-content: space-around;
   font-size: 14px;
   height: fit-content;
   padding: 5px;
   color: blue;
+  border-radius: 5px;
+}
+
+.scoreBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin-top: 5px;
+  border-radius: 3px;
 }
 
 .Missile {
@@ -320,7 +347,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
+  align-items: center;
   z-index: 1000;
   width: 400px;
   height: 200px;

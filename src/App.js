@@ -31,6 +31,8 @@ import { bombCollision, createBomb, moveBombs } from './backfire';
 import { bossCollision, bulletsCollision, checkMissileCollision, fireBossRounds, fireCannon, renderBoss } from './boss';
 import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
+import { MuteButton } from './audio';
+import { FormatTimeElapsed, GetTimeElapsed } from './utils';
 
 export const getInitialGameWorld = () => { return {
   stats: {
@@ -39,8 +41,6 @@ export const getInitialGameWorld = () => { return {
     stageScore: 0,
     lives: 3,
     bombsHit: 0,
-
-    misses: 0,
 
     starScreen: true,
     endScreen: false,
@@ -90,7 +90,11 @@ export const getInitialGameWorld = () => { return {
   boss_missiles: [],
   
   startScreen: true,
-  endScreen: false
+  endScreen: false,
+  time: {
+    start: new Date(),
+    elapsed: 0,
+  }
 }};
 
 export function App() {
@@ -161,7 +165,10 @@ export function App() {
         startScreen,
         endScreen,
         bossStats,
+        time,
       } = _gameWorld.current;
+
+      time.elapsed = GetTimeElapsed(time.start, new Date())
 
       // frame++;
       // if (frame%4 !== 0) {
@@ -281,18 +288,27 @@ export function App() {
     boss_rounds,
     boss_missiles,
     startScreen,
-    endScreen
+    endScreen,
+    time,
   } = _gameWorld.current;
 
   return <>
     {
-    startScreen && <StartScreen setStartScreen={val => _gameWorld.current.startScreen = val}/>
+    startScreen && <StartScreen 
+      startGame={() => {
+          _gameWorld.current.startScreen = false
+          _gameWorld.current.time.start = new Date()
+          _gameWorld.current.time.elapsed = 0
+        }
+      }
+      forceRerender={forceRerender}/>
     || endScreen && <EndScreen 
         setStartScreen={val => _gameWorld.current.startScreen = val}
         initializeGameWorld={val => _gameWorld.current = val}
         stats={stats}
         forceRerender={forceRerender}
         setEndScreen={val => _gameWorld.current.endScreen = val}
+        timeScore={_gameWorld.current.time.elapsed}
         />
     || <>
         <div className="Container"
@@ -305,14 +321,30 @@ export function App() {
           <div className='Background'>
             <img src='./background.png'></img>
           </div>
+          <div className='time'>
+            {
+              localStorage.getItem('highscore') && <>
+              <div className='scoreBlock'>{localStorage.getItem('name')} &nbsp; <i className='fa-solid fa-crown'></i> &nbsp; {FormatTimeElapsed(localStorage.getItem('highscore'))}</div>
+              </>
+            }
+            <div className='scoreBlock'><i className='fa-solid fa-stopwatch'></i> &nbsp; {FormatTimeElapsed(time.elapsed)}</div>
+          </div>
           <div className='score'>
-            <div>Score: {stats.score}</div>
-            <div>Missiles: {homingMissilesStats.onScreen}</div>
-            <div>Stage {stats.stage + 1}</div>
-            <div>Lives {stats.lives}</div>
-            <div>Highscore {localStorage.getItem('highscore')}</div>
-            <div>|</div>
-            <div>{localStorage.getItem('name')}</div>
+            <div className='scoreBlock'>{
+              Array(5).fill(<div className='scoreBlock'></div>)
+                .map((v, i) => i < stats.lives 
+                  && <i className='fa-solid fa-heartbeat'></i>
+                  || v).concat(stats.lives > 5 && <div className='scoreBlock'>&nbsp;+</div> || '')
+            }</div>
+            {
+              <div className='scoreBlock'>{
+                Array(5).fill(<div className='scoreBlock'></div>)
+                .map((v, i) => i < homingMissilesStats.onScreen 
+                  && <i className='fa-solid fa-rocket'></i>
+                  || v)
+              }</div>
+              
+            }
           </div>
           <div className='Platform' style={{left: platform.x - 25}}>
             <img src='./manpad.png' width='50px'></img>
@@ -437,6 +469,7 @@ export function App() {
             <div className='pauseWindow'>
               <div>Game paused</div>
               <div>press P to continue</div>
+              <MuteButton/>
             </div>
           </div>
         }

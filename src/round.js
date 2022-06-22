@@ -1,4 +1,6 @@
 import { getRoundConfig } from "./ConfigProvider";
+import { Howl } from "howler";
+import { missileLaunch } from "./audio";
 
 export function CreateRound(x, y) {
     return {
@@ -15,6 +17,8 @@ export function ShootRound(rounds, platform, roundStats) {
             40,
         )
         rounds.push(round)
+
+        missileLaunch.play()
     
         roundStats.shot = true;
         setTimeout(() => {

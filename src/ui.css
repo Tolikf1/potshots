@@ -40,7 +40,6 @@
     height: 50px;
     width: 200px;
     margin-bottom: 5px;
-
 }
 
 .button:hover {
@@ -202,7 +201,7 @@
     justify-content: center;
     background-color: rgb(213, 210, 52);
     border-radius: 5px;
-    height: 100px;
+    height: 150px;
     width: 200px;
     margin-bottom: 5px;
 }
@@ -262,4 +261,34 @@
 
   .setButton:active {
     background-color: #4719ec; 
+  }
+
+  .mute {
+    font-size: 25px;
+    color: black;
+    opacity: 0.75;
+  }
+  
+  .muteButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: solid 2px rgb(213, 210, 52);
+    height: 50px;
+    width: 50px;
+    margin-bottom: 5px;
+    z-index: 10000;
+  }
+
+  .muteButton:hover {
+      transition: 500ms;
+      background-color: rgb(213, 210, 52);
+  }
+
+  .muteButton:hover .mute {
+      transition: 500ms;
+      opacity: 1;
+      text-shadow: 0 0 1px black;
   }

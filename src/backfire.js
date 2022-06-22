@@ -1,3 +1,4 @@
+import { hitSfx, lifeSfx } from "./audio";
 import { CreateCollisionAnimation } from "./collisionAnimation";
 import { SetScreenEffect } from "./utils";
 
@@ -42,6 +43,7 @@ export function moveBombs(bombs, platform, stats, collisionAnimations, screenEff
             if (Math.abs(bomb.x - platform.x) < 35) {
                 stats.lives--
                 SetScreenEffect(screenEffect, '-life', 15)
+                hitSfx.play()
             }
             bombs.splice(i, 1)
             i--;
@@ -63,11 +65,12 @@ export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations
                 200,
             ));
             stats.bombsHit++;
-            if (stats.bombsHit == 100) {
+            if (stats.bombsHit == 1) {
                 stats.lives++
                 stats.bombsHit = 0
 
                 SetScreenEffect(screenEffect, '+life', 15)
+                lifeSfx.play()
             }
             bombs.splice(i, 1);
             i--;

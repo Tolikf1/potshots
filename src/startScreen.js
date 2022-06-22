@@ -1,16 +1,58 @@
 import './ui.css';
 import React from 'react';
+import { hitSfx, isOnMute, lifeSfx, menuMusic, MuteButton, playBattleMusic, startedMusic, switchMute } from './audio';
+import { useForceRerender } from './App';
 
-export function StartScreen({setStartScreen}) {
+export function StartScreen({startGame, forceRerender}) {
     const [hintsHidden, updateHintsHidden] = React.useState(false)
+    const [startEnabled, updateStartEnabled] = React.useState(true)
+
+    React.useEffect(() => {
+        if (startedMusic() && !isOnMute()) {
+            playMusic()
+        }
+    })
+
+    const musicEndAction = React.useRef(() => {})
+    const musicStarted = React.useRef(false)
+    const playMusic = () => {
+        menuMusic.play()
+        menuMusic.fade(0, 1, 5000)
+
+        musicEndAction.current = () => {
+            menuMusic.fade(1, 0, 500)
+            setTimeout(() => menuMusic.stop(), 500)
+        }
+        musicStarted.current = true
+    }
+
     return <>
         <div className='container'>
             <div>
                 <div className='title'>POTSHOTS</div>
             </div>
             <div className='buttonSelector'>
-                <div className='button' onClick={() => {
-                    setStartScreen(false)
+                <MuteButton onSwitchMute={() => {
+                        if (!musicStarted.current) {
+                            playMusic()
+                            startedMusic(true)
+                        }
+                    }}
+                />
+                <div className='button' disabled={!startEnabled} onClick={() => {
+                    if (musicStarted.current) {
+                        setTimeout(() => {
+                            musicEndAction.current()
+                            startGame()
+                            playBattleMusic()
+                        }, 500)
+                    }
+                    else {
+                        startGame()
+                        playBattleMusic()
+                        startedMusic(true)
+                    }
+                    updateStartEnabled(false)
                 }}>Start</div>
                 <div className='button' onClick={() => {
                     updateHintsHidden(!hintsHidden)

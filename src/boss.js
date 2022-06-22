@@ -1,3 +1,4 @@
+import { hitSfx } from "./audio"
 import { bombCollision } from "./backfire"
 import { CreateCollisionAnimation } from "./collisionAnimation"
 import { getBossConfig } from "./ConfigProvider"
@@ -34,7 +35,6 @@ export function createBoss(bossStats) {
     boss.rightWing = createWing(boss, false)
     
     bossStats.boss = boss
-    console.log(bossStats)
 }
 
 function createWing(boss, isLeft) {
@@ -156,23 +156,6 @@ export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, pl
     fireBoss_missile(boss.rightWing, boss_missiles);
 
     return <>
-        <div style={{
-            position: "absolute",
-            top: 40,
-            left: 5,
-        }}>
-            <div>hp: {boss.hp} | lock: {boss.attackLock}</div>
-            {
-                boss.leftWing && <>
-                <div>LWing: hp: {boss.leftWing.hp} | {boss.leftWing.roundLauncher && `roundLauncher hp: ${boss.leftWing.roundLauncher.hp}`}</div>
-                </>
-            }
-            {
-                boss.rightWing && <>
-                <div>RWing: hp: {boss.rightWing.hp} | {boss.rightWing.roundLauncher && `roundLauncher hp: ${boss.rightWing.roundLauncher.hp}`}</div><br/>
-                </>
-            }
-        </div>
         {
             renderWingHitboxes(boss.leftWing, 'left')
         }
@@ -446,6 +429,7 @@ export function bulletsCollision(bullets, platform, stats, collisionAnimations, 
             if (Math.abs(bullets[i].x - platform.x) < 35) {
                 stats.lives--
                 SetScreenEffect(screenEffect, '-life', 15)
+                hitSfx.play()
             }
             bullets.splice(i, 1);
             i--
@@ -575,6 +559,7 @@ export function checkMissileCollision(boss_missiles, platform, stats, collisionA
             if (Math.abs(boss_missile.x - platform.x) < 35) {
                 stats.lives--
                 SetScreenEffect(screenEffect, '-life', 15)
+                hitSfx.play()
             }
             boss_missiles.splice(i, 1)
             i--;
