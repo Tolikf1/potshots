@@ -65,7 +65,7 @@ export function bombCollision(bombs, rounds, homingMissiles, collisionAnimations
                 200,
             ));
             stats.bombsHit++;
-            if (stats.bombsHit == 1) {
+            if (stats.bombsHit == 100) {
                 stats.lives++
                 stats.bombsHit = 0
 
