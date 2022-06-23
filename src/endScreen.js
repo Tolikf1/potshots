@@ -14,7 +14,7 @@ export function EndScreen({setStartScreen, initializeGameWorld, stats , forceRer
         const endMusicId = endMusic.play()
 
         return () => endMusic.stop(endMusicId)
-    })
+    }, [])
 
     return <>
         <div className='container'>

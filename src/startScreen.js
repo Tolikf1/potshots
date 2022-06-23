@@ -11,7 +11,7 @@ export function StartScreen({startGame, forceRerender}) {
         if (startedMusic() && !isOnMute()) {
             playMusic()
         }
-    })
+    }, [])
 
     const musicEndAction = React.useRef(() => {})
     const musicStarted = React.useRef(false)
