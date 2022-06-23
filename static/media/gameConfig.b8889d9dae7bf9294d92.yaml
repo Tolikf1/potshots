@@ -1,0 +1,108 @@
+round:
+  speed: 15
+  cooldown: 100
+  maxOnScreen: 5
+homingMissile:
+  speed: 25
+  angleSpeedDeg: 7.5
+  maxOnScreen: 5
+  cooldown: 500
+  lifespan: 55
+  fallSpeed: 
+    x: 0.5
+    y: 2
+    rotation: 5
+parachute:
+  xSpeed: 3
+  ySpeed: 1
+  chance: 40
+
+gameStages:
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed1
+        count: 4
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed2
+        count: 4
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed2
+        count: 3
+      - type: speed1
+        count: 2
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed3
+        count: 1
+  - scoreToBeat: 80
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 1
+  - scoreToBeat: 100
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed3
+        count: 2
+  - scoreToBeat: 30
+    plateConfig:
+      - type: speed4
+        count: 2
+  - scoreToBeat: boss
+  - scoreToBeat: 200
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed3
+        count: 1
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 2
+  - scoreToBeat: boss
+    plateConfig:
+      - type: speed1
+        count: 2
+      - type: speed4
+        count: 1
+        
+
+plateTypes:
+  speed1:
+    speed: 3
+    horizontalSpeed: 7
+    sprite: ./speed1.png
+  speed2:
+    speed: 6
+    horizontalSpeed: 3
+    sprite: ./speed2.png
+  speed3:
+    speed: 8
+    horizontalSpeed: 2
+    sprite: ./speed3.png
+  speed4:
+    speed: 0
+    horizontalSpeed: 5
+    sprite: ./speed4.png
+
+boss:
+  speedY: 0
+  speedX: 0
+  sprites:
+    body: ./boss1_body.png
+    wing: ./boss1_wing.png
+    roundLauncher: ./boss1_roundLauncher.png
+    missileLauncher: ./boss1_missileLauncher.png
+  hp:
+    boss: 400
+    wing: 50
+    roundLauncher: 50
+  behaviorHpPercentages:
+    diagonal: 0.66
+    seeking: 0.33
