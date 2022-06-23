@@ -28,7 +28,7 @@ import { gameManager } from './StageManager';
 import { createMissile, MoveHomingMissiles } from './homingMissile';
 import { createFlare, flareCollision, getFlarePoints, manageFlare } from './flares';
 import { bombCollision, createBomb, moveBombs } from './backfire';
-import { bossCollision, bulletsCollision, checkMissileCollision, fireBossRounds, fireCannon, renderBoss } from './boss';
+import { bossCollision, bossFrameRun, bulletsCollision, checkMissileCollision, fireBossRounds, fireCannon, moveBossRounds, moveBullet, renderBoss } from './boss';
 import { StartScreen } from './startScreen';
 import { EndScreen } from './endScreen';
 import { MuteButton } from './audio';
@@ -246,6 +246,9 @@ export function App() {
         bossStats.boss.roundsCooldown--
         bossStats.boss.leftWing && fireBossRounds(bossStats.boss.leftWing, boss_rounds, bossStats.boss, collisionAnimations)
         bossStats.boss.rightWing && fireBossRounds(bossStats.boss.rightWing, boss_rounds, bossStats.boss, collisionAnimations)
+
+        bossFrameRun(bossStats.boss, bullets, boss_rounds, boss_missiles, flares, 
+          platform, collisionAnimations, bossStats)
       }
 
       // manage screen effects

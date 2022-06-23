@@ -135,9 +135,7 @@ function createHitBox(widthFunc, heightFunc,
     return box
 }
 
-export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, platform, collisionAnimations, bossStats) {
-    const bossBodyRect = getBossBodyRect(boss)
-
+export function bossFrameRun(boss, bullets, boss_rounds, boss_missiles, flares, platform, collisionAnimations, bossStats) {
     bossMove(boss, platform, collisionAnimations, bossStats);
 
     moveBullet(bullets)
@@ -154,6 +152,27 @@ export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, pl
     }
     fireBoss_missile(boss.leftWing, boss_missiles);
     fireBoss_missile(boss.rightWing, boss_missiles);
+}
+
+export function renderBoss(boss, bullets, boss_rounds, boss_missiles, flares, platform, collisionAnimations, bossStats) {
+    const bossBodyRect = getBossBodyRect(boss)
+
+    // bossMove(boss, platform, collisionAnimations, bossStats);
+
+    // moveBullet(bullets)
+    // moveBossRounds(boss_rounds)
+    // if (boss_missiles.length >= 0) {
+    //     if (boss.flaresCooldown >= 0) {
+    //         boss.flaresCooldown--
+    //     }
+    //     else {
+    //         createBossFlare(boss, flares, 1);
+    //         createBossFlare(boss, flares, -1);
+    //         boss.flaresCooldown = 80
+    //     }
+    // }
+    // fireBoss_missile(boss.leftWing, boss_missiles);
+    // fireBoss_missile(boss.rightWing, boss_missiles);
 
     return <>
         {
@@ -418,7 +437,7 @@ export function fireCannon(boss, bullets, collisionAnimations) {
 
 export function moveBullet(bullets) {
     for (let i = 0; i < bullets.length; i++) {
-        bullets[i].y -= bullets[i].speed
+        bullets[i].y -= bullets[i].speed * 2
     }
 }
 
@@ -489,7 +508,7 @@ export function fireBossRounds(wing, boss_rounds, boss, collisionAnimations) {
 
 export function moveBossRounds(boss_rounds) {
     for (let i = 0; i < boss_rounds.length; i++) {
-        boss_rounds[i].y -= boss_rounds[i].speed
+        boss_rounds[i].y -= boss_rounds[i].speed * 2
     }
 }
 
@@ -577,12 +596,15 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
     const insideRightBound = () => boss.x < rightBound();
     const inBounds = () => insideLeftBound() && insideRightBound();
 
+    const ySpeedBase = 2
+    const xSpeedBase = 2
+
     if (!inBounds()) {
 
     }
 
     if (boss.initialPosition === 'yes') {
-        boss.y+=0.5;
+        boss.y += 0.5 * ySpeedBase;
         if (boss.y >= (window.innerHeight - boss.height())) {
             boss.initialPosition = 'no';
         }
@@ -590,7 +612,7 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
     if (hpPercentage <= behaviorHpPercentages.seeking) {
         if (boss.attackLock == 'no') {
             if (inBounds()) {
-                boss.x += 2*boss.direction
+                boss.x += 2*boss.direction * xSpeedBase
             }
             else {
                 boss.x = !insideLeftBound()
@@ -600,7 +622,7 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
             }
 
             if (boss.y <= window.innerHeight - boss.height()) {
-                boss.y++
+                boss.y += 1 * ySpeedBase
             }
             else {
                 boss.attackLock = platform.x
@@ -608,8 +630,8 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
             }
         }
         else {
-            boss.x += 3*boss.direction;
-            boss.y -= 3
+            boss.x += 3*boss.direction * xSpeedBase;
+            boss.y -= 3 * ySpeedBase
             if (!inBounds() || Math.abs(boss.x - boss.attackLock) < 5 || boss.y < 225) {
                 boss.attackLock = 'no'
             }
@@ -617,20 +639,20 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
     }
     else if (hpPercentage <= behaviorHpPercentages.diagonal) {
         if (inBounds()) {
-            boss.x += boss.direction * 3
-            boss.y -= 0.5
+            boss.x += boss.direction * 3 * xSpeedBase
+            boss.y -= 0.5 * ySpeedBase
         }
         else if (boss.y <= window.innerHeight - boss.height()) {
-            boss.y++
+            boss.y += 1 * ySpeedBase
         }
         else {
             boss.direction = - boss.direction
-            boss.x += 3*boss.direction
+            boss.x += 3*boss.direction * xSpeedBase
         }
     }
     else {
         if (boss.stationaryTime <= 0) {
-            boss.x += boss.direction * 2;
+            boss.x += boss.direction * 2 * xSpeedBase;
             if (!inBounds()) {
                 boss.direction = -boss.direction
             }
@@ -643,8 +665,8 @@ function bossMove(boss, platform, collisionAnimations, bossStats) {
         }
     }
     if (boss.hp <= 0) {
-        boss.x +=boss.direction
-        boss.y -= 5
+        boss.x += boss.direction * xSpeedBase
+        boss.y -= 5 * ySpeedBase
         let collisionX = Math.random() * boss.width / 2
         let collisionY = Math.random() * boss.width / 2
         collisionAnimations.push(CreateCollisionAnimation(boss.x + collisionX, boss.y + collisionY, 50, 200))
