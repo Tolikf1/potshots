@@ -4,7 +4,7 @@ import { hitSfx, isOnMute, lifeSfx, menuMusic, MuteButton, playBattleMusic, star
 import { useForceRerender } from './App';
 
 export function StartScreen({startGame, forceRerender}) {
-    const [hintsHidden, updateHintsHidden] = React.useState(false)
+    const [hintsHidden, updateHintsHidden] = React.useState(localStorage.getItem('hintsClicked'))
     const [startEnabled, updateStartEnabled] = React.useState(true)
 
     React.useEffect(() => {
@@ -52,13 +52,14 @@ export function StartScreen({startGame, forceRerender}) {
                         playBattleMusic()
                         startedMusic(true)
                     }
+                    localStorage.setItem('hintsClicked', true)
                     updateStartEnabled(false)
                 }}>Start</div>
                 <div className='button' onClick={() => {
                     updateHintsHidden(!hintsHidden)
-                }}>Hints:</div>
+                }}>Controls and Mechanics</div>
                 <div className='hints'>
-                    { hintsHidden &&
+                    { !hintsHidden &&
                     <>
                         <div className='hintsRow'>Use<i className="fa-solid fa-mouse awesomePadding"></i>to move a shooter sideways</div>
                         <div className='hintsRow'>Press X key on a <i className="fa-regular fa-keyboard awesomePadding"></i> to shoot</div>

@@ -3,9 +3,12 @@ import React from 'react';
 import { getInitialGameWorld, useForceRerender } from './App';
 import { endMusicBad, endMusicGood, playBattleMusic, stopBattleMusic, MuteButton } from './audio';
 import { FormatTimeElapsed } from './utils';
+import { getGameStages } from './ConfigProvider';
 
 export function EndScreen({setStartScreen, initializeGameWorld, stats , forceRerender, setEndScreen, timeScore}) {
     const [name, updateName] = React.useState(false)
+    const [success] = React.useState(stats.lives > 0)
+
     React.useEffect(() => {
         stopBattleMusic()
         const endMusic = stats.lives
@@ -19,12 +22,10 @@ export function EndScreen({setStartScreen, initializeGameWorld, stats , forceRer
     return <>
         <div className='container'>
             {
-                !stats.lives &&
-                <div>
+                !success &&
                     <div className='title'>WELL, AT LEAST YOU TRIED...</div>
-                </div>
                 ||
-                <div>
+                <>
                     <div className='title'>CONGRATS</div>
                     {
                         (!localStorage.getItem('highscore') || timeScore < localStorage.getItem('highscore')) &&
@@ -43,7 +44,7 @@ export function EndScreen({setStartScreen, initializeGameWorld, stats , forceRer
                         </div>
                     </>                        
                     }
-                </div>
+                </>
             }
             <div className='buttonSelector'>
                 <div className='button' onClick={() => {

@@ -18,53 +18,53 @@ parachute:
   chance: 40
 
 gameStages:
-  # - scoreToBeat: 20
-  #   plateConfig:
-  #     - type: speed1
-  #       count: 4
-  # - scoreToBeat: 20
-  #   plateConfig:
-  #     - type: speed2
-  #       count: 4
-  # - scoreToBeat: 20
-  #   plateConfig:
-  #     - type: speed2
-  #       count: 3
-  #     - type: speed1
-  #       count: 2
-  # - scoreToBeat: 20
-  #   plateConfig:
-  #     - type: speed3
-  #       count: 1
-  # - scoreToBeat: 80
-  #   plateConfig:
-  #     - type: speed4
-  #       count: 1
-  #     - type: speed2
-  #       count: 1
-  #     - type: speed1
-  #       count: 1
-  # - scoreToBeat: 100
-  #   plateConfig:
-  #     - type: speed4
-  #       count: 1
-  #     - type: speed3
-  #       count: 2
-  # - scoreToBeat: 30
-  #   plateConfig:
-  #     - type: speed4
-  #       count: 2
-  # - scoreToBeat: boss
-  # - scoreToBeat: 200
-  #   plateConfig:
-  #     - type: speed4
-  #       count: 1
-  #     - type: speed3
-  #       count: 1
-  #     - type: speed2
-  #       count: 1
-  #     - type: speed1
-  #       count: 2
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed1
+        count: 4
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed2
+        count: 4
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed2
+        count: 3
+      - type: speed1
+        count: 2
+  - scoreToBeat: 20
+    plateConfig:
+      - type: speed3
+        count: 1
+  - scoreToBeat: 80
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 1
+  - scoreToBeat: 100
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed3
+        count: 2
+  - scoreToBeat: 30
+    plateConfig:
+      - type: speed4
+        count: 2
+  - scoreToBeat: boss
+  - scoreToBeat: 200
+    plateConfig:
+      - type: speed4
+        count: 1
+      - type: speed3
+        count: 1
+      - type: speed2
+        count: 1
+      - type: speed1
+        count: 2
   - scoreToBeat: boss
     plateConfig:
       - type: speed1
