@@ -295,6 +295,17 @@ export function App() {
     time,
   } = _gameWorld.current;
 
+  let backgroundWidth
+  let backgroundHeight
+  if (window.innerHeight > window.innerWidth) {
+    backgroundWidth = 'auto'
+    backgroundHeight = '100vh'
+  }
+  else {
+    backgroundWidth = '100vw'
+    backgroundHeight = 'auto'
+  }
+
   return <>
     {
     startScreen && <StartScreen 
@@ -322,7 +333,10 @@ export function App() {
           }}
           >
           <div className='Background'>
-            <img src='./background.png'></img>
+            <img src='./background.png' style={{
+              width: backgroundWidth,
+              height: backgroundHeight,
+            }}></img>
           </div>
           <div className='time'>
             {
