@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/potshots/static/css/main.d8df85b0.css",
-    "main.js": "/potshots/static/js/main.037f3f5d.js",
+    "main.js": "/potshots/static/js/main.37fce29b.js",
     "static/js/787.9ea704ea.chunk.js": "/potshots/static/js/787.9ea704ea.chunk.js",
     "static/media/fa-solid-900.ttf": "/potshots/static/media/fa-solid-900.e615bbcb258550973c16.ttf",
     "static/media/fa-brands-400.ttf": "/potshots/static/media/fa-brands-400.b823fc0dbb5a5f0c21bb.ttf",
@@ -15,11 +15,11 @@
     "static/media/gameConfig.yaml": "/potshots/static/media/gameConfig.b8889d9dae7bf9294d92.yaml",
     "index.html": "/potshots/index.html",
     "main.d8df85b0.css.map": "/potshots/static/css/main.d8df85b0.css.map",
-    "main.037f3f5d.js.map": "/potshots/static/js/main.037f3f5d.js.map",
+    "main.37fce29b.js.map": "/potshots/static/js/main.37fce29b.js.map",
     "787.9ea704ea.chunk.js.map": "/potshots/static/js/787.9ea704ea.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d8df85b0.css",
-    "static/js/main.037f3f5d.js"
+    "static/js/main.37fce29b.js"
   ]
 }
